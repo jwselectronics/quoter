@@ -161,7 +161,7 @@
 
         <div id="inlineContactSection" class="mt-10 pt-8 border-t border-gray-200 hidden-integrated" style="display: none;">
             <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Contact Us</h2>
-		<div class="flex justify-center mb-6">
+            <div class="flex justify-center mb-6">
                 <img src="https://speedy.uenicdn.com/203df42d-68ff-44a8-9fc5-6cd85963ee3a/c1024_410a/image/upload/v1745362365/business/9085d73d-c2cf-41e1-82c2-61a291fcb76a.jpg" alt="JWS Electronics Repair Storefront" class="rounded-lg shadow-md max-w-xs sm:max-w-sm md:max-w-md h-auto">
             </div>
             <div class="grid md:grid-cols-2 gap-8 mb-6">
@@ -169,7 +169,6 @@
                     <h3 class="text-xl font-semibold text-gray-700 mb-3">Our Information</h3>
                     <ul class="space-y-2 text-gray-600">
                         <li><strong>Phone:</strong> <a href="tel:+16316062349" class="text-orange-600 hover:text-orange-700">(631) 606-2FIX (2349)</a></li>
-			<li><strong>Phone:</strong> <a href="tel:+16316062349" class="text-orange-600 hover:text-orange-700">(631) 855-5555</a></li>    
                         <li><strong>Email:</strong> <a href="mailto:jwselectronicsrepair@gmail.com" class="text-orange-600 hover:text-orange-700">jwselectronicsrepair@gmail.com</a></li>
                         <li><strong>Address:</strong> 1167 Deer Park Ave, North Babylon, NY 11703</li>
                         <li><strong>Exact Location:</strong> Inside the Wireless Shack, Next to Sushi Express, on the North end of the Stables Gardens Strip, closer to Naz's Halal</li>
@@ -2881,7 +2880,7 @@
         ];
         // --- END OF SERVICE DATA ---
     
-         // DOM Element References - getting all necessary elements from the HTML
+  // DOM Element References - getting all necessary elements from the HTML
         const categoryIconContainer = document.getElementById('categoryIconContainer');
         const brandSelect = document.getElementById('brandSelect');
         const modelSelect = document.getElementById('modelSelect');
@@ -3217,13 +3216,14 @@
 
         /**
          * Updates the quote summary display (selected items list and total price).
-         * Reads from currentSelectedItems.
+         * Applies a 5% discount if 2 or more items are selected.
          */
         function updateQuote() {
             selectedItemsList.innerHTML = ''; // Clear previous list
-            let total = 0;
+            let subtotal = 0;
+            const itemCount = Object.keys(currentSelectedItems).length;
 
-            if (Object.keys(currentSelectedItems).length === 0) {
+            if (itemCount === 0) {
                 selectedItemsList.innerHTML = '<p class="text-gray-500">No items selected yet.</p>';
             } else {
                 const ul = document.createElement('ul');
@@ -3232,61 +3232,84 @@
                     const item = currentSelectedItems[id];
                     const li = document.createElement('li');
                     li.className = 'flex justify-between py-1';
-                    // Display item name, category, brand, model, and price
                     li.innerHTML = `<span>${item.name} <em class="text-xs text-gray-500">(${item.category} > ${item.brand} > ${item.model})</em></span> <span class="font-medium">$${item.price.toFixed(2)}</span>`;
                     ul.appendChild(li);
-                    total += item.price; // Add item price to total
+                    subtotal += item.price; 
                 }
                 selectedItemsList.appendChild(ul);
             }
-            totalPriceDisplay.textContent = `$${total.toFixed(2)}`; // Display total price
+
+            let finalTotal = subtotal;
+            if (itemCount >= 2) {
+                const discountAmount = subtotal * 0.05;
+                finalTotal = subtotal - discountAmount;
+                
+                const discountLi = document.createElement('li');
+                discountLi.className = 'flex justify-between py-1 text-green-600 font-medium';
+                discountLi.innerHTML = `<span>Multi-Item Discount (5%)</span> <span>-$${discountAmount.toFixed(2)}</span>`;
+                // Add the discount line after the items, but before the HR if possible, or just append
+                if(selectedItemsList.querySelector('ul')) {
+                    selectedItemsList.querySelector('ul').appendChild(document.createElement('hr')); // Visual separator
+                    selectedItemsList.querySelector('ul').appendChild(discountLi);
+                } else { // Should not happen if itemCount > 0, but as a fallback
+                    selectedItemsList.appendChild(discountLi);
+                }
+            }
+            totalPriceDisplay.textContent = `$${finalTotal.toFixed(2)}`;
         }
 
         /**
          * Shows the contact information section and populates it with the current quote details.
-         * Only shows if at least one repair item is selected.
+         * Applies a 5% discount if 2 or more items are selected.
          */
         function showContactSection() {
-            // Check if any items are selected before showing contact info
-            if (Object.keys(currentSelectedItems).length === 0) {
+            const itemCount = Object.keys(currentSelectedItems).length;
+            if (itemCount === 0) { 
                 mainSubmissionMessage.textContent = "Please select at least one repair to generate a quote first.";
-                mainSubmissionMessage.className = 'mt-4 text-red-600 font-medium'; // Error message style
-                setTimeout(() => { mainSubmissionMessage.textContent = ''; }, 4000); // Message disappears after 4s
-                return; // Do not proceed if no items are selected
+                mainSubmissionMessage.className = 'mt-4 text-red-600 font-medium'; 
+                setTimeout(() => { mainSubmissionMessage.textContent = ''; }, 4000); 
+                return;
             }
-            mainSubmissionMessage.textContent = ''; // Clear any previous messages
+            mainSubmissionMessage.textContent = ''; 
 
-            // Populate the contact section's quote summary
             contactFormQuoteItems.innerHTML = '';
-            let contactTotal = 0;
+            let contactSubtotal = 0;
             const ul = document.createElement('ul');
-            ul.className = 'list-disc list-inside'; // Style for a bulleted list
+            ul.className = 'list-disc list-inside'; 
             for (const id in currentSelectedItems) {
                 const item = currentSelectedItems[id];
                 const li = document.createElement('li');
-                // Display item name, model, and price in the contact section's quote
                 li.innerHTML = `${item.name} (${item.model}) - <span class="font-semibold">$${item.price.toFixed(2)}</span>`;
                 ul.appendChild(li);
-                contactTotal += item.price;
+                contactSubtotal += item.price;
             }
             contactFormQuoteItems.appendChild(ul);
-            contactFormQuoteTotal.textContent = `$${contactTotal.toFixed(2)}`; // Display total in contact section
 
-            toggleElementVisibility(inlineContactSection, true); // Show the contact section
-            inlineContactSection.scrollIntoView({ behavior: 'smooth', block: 'start' }); // Scroll to the contact section
+            let contactFinalTotal = contactSubtotal;
+            if (itemCount >= 2) {
+                const discountAmount = contactSubtotal * 0.05;
+                contactFinalTotal = contactSubtotal - discountAmount;
+                const discountLi = document.createElement('li');
+                discountLi.className = 'text-green-600 font-medium mt-1'; // Added some margin top
+                discountLi.style.listStyleType = 'none'; // Remove bullet for discount line
+                discountLi.innerHTML = `Multi-Item Discount (5%): -$${discountAmount.toFixed(2)}`;
+                contactFormQuoteItems.appendChild(discountLi);
+            }
+            contactFormQuoteTotal.textContent = `$${contactFinalTotal.toFixed(2)}`; 
+
+            toggleElementVisibility(inlineContactSection, true); 
+            inlineContactSection.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
         }
 
         // Initial setup when the DOM is fully loaded
         document.addEventListener('DOMContentLoaded', () => {
-            populateCategories(); // Create and display the category icons
-            updateQuote(); // Initialize the quote summary (will show "No items selected")
+            populateCategories(); 
+            updateQuote(); 
 
-            // Ensure dropdowns and contact section are initially hidden using the animation function
             resetAndHideDropdown(brandSelect, brandSelectionContainer, "-- Choose a Brand --");
             resetAndHideDropdown(modelSelect, modelSelectionContainer, "-- Choose a Model --");
             toggleElementVisibility(inlineContactSection, false);
 
-            // Attach event listener to the main contact button
             contactButton.addEventListener('click', showContactSection);
         });
     </script>
