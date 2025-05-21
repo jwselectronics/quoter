@@ -25,7 +25,7 @@
 
         /* Styles for individual repair cards */
         .repair-card {
-            min-height: 120px; /* Minimum height for consistency */
+            min-height: 100px; /* Adjusted min-height as price is removed */
             display: flex;
             flex-direction: column;
             justify-content: space-between; /* Pushes select button to bottom */
@@ -137,9 +137,10 @@
         </div>
 
         <div id="repairsArea" class="mb-6 min-h-[200px] max-h-[50vh] overflow-y-auto p-1">
-            <p id="repairsPlaceholder" class="text-gray-500 text-center py-4">Please complete selections to see repair options. You may choose multiple items of the same service category.</p>
+            <p id="repairsPlaceholder" class="text-gray-500 text-center py-4">Please complete selections to see repair options and quote. You may choose multiple repairs of the same service category.</p>
             </div>
 
+        <!-- 
         <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Your Quote Summary:</h2>
             <div id="selectedItemsList" class="mb-4 space-y-2">
@@ -150,7 +151,8 @@
                 <p class="text-xl font-bold text-gray-800">Estimated Total:</p>
                 <p id="totalPrice" class="text-2xl font-bold text-orange-600">$0.00</p>
             </div>
-        </div>
+        </div> 
+        -->
 
         <div class="mt-8 text-center">
             <button id="contactButton" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-8 rounded-lg shadow-md transition duration-150 ease-in-out text-lg">
@@ -169,7 +171,7 @@
                     <h3 class="text-xl font-semibold text-gray-700 mb-3">Our Information</h3>
                     <ul class="space-y-2 text-gray-600">
                         <li><strong>Phone:</strong> <a href="tel:+16316062349" class="text-orange-600 hover:text-orange-700">(631) 606-2FIX (2349)</a></li>
-			<li><strong>Phone 2nd Line:</strong> <a href="tel:+16318555555" class="text-orange-600 hover:text-orange-700">(631) 855-5555</a></li>    
+			<li><strong>Phone:</strong> <a href="tel:+16318555555" class="text-orange-600 hover:text-orange-700">(631) 855-5555</a></li>
                         <li><strong>Email:</strong> <a href="mailto:jwselectronicsrepair@gmail.com" class="text-orange-600 hover:text-orange-700">jwselectronicsrepair@gmail.com</a></li>
                         <li><strong>Address:</strong> 1167 Deer Park Ave, North Babylon, NY 11703</li>
                         <li><strong>Exact Location:</strong> Inside the Wireless Shack, Next to Sushi Express, on the North end of the Stables Gardens Strip, closer to Naz's Halal</li>
@@ -181,11 +183,12 @@
                 <div class="p-4 bg-orange-50 rounded-lg shadow">
                     <h3 class="text-lg font-medium text-orange-700 mb-2">Your Quoted Services:</h3>
                     <div id="contactFormQuoteItems" class="text-sm space-y-1 text-gray-700 max-h-48 overflow-y-auto"></div>
-                    <p class="text-right font-bold mt-2 text-orange-600">Estimated Total: <span id="contactFormQuoteTotal"></span></p>
-                    <p class="text-xs text-center mt-4 text-gray-500">Please mention this quote when contacting us. Prices are subject to change at any time and are not always 100% accurate. All repairs are also subject to sales tax.</p>
+                    <hr id="contactFormQuoteSeparator" class="my-2 border-gray-300" style="display: none;">
+                    <p class="text-right font-bold mt-2 text-orange-600 text-2xl">Estimated Total: <span id="contactFormQuoteTotal"></span></p>
+                    <p class="text-xs text-center mt-4 text-gray-500">Please mention this quote when contacting us. Prices can change at any time and all repairs are subjest to NY State sales tax.</p>
                 </div>
             </div>
-            <p class="text-center text-gray-700 mt-6">Please call, text, email, or visit us with your quote details to proceed with your repair.</p>
+            <p class="text-center text-gray-700 mt-6">Please Call, Text, E-Mail, or Visit us with your quote details to proceed with your repair.</p>
         </div>
     </div>
 <script>
@@ -2905,42 +2908,34 @@
         ];
         // --- END OF SERVICE DATA ---
     
-  // DOM Element References - getting all necessary elements from the HTML
+ // DOM Element References
         const categoryIconContainer = document.getElementById('categoryIconContainer');
         const brandSelect = document.getElementById('brandSelect');
         const modelSelect = document.getElementById('modelSelect');
-
         const brandSelectionContainer = document.getElementById('brandSelectionContainer');
         const modelSelectionContainer = document.getElementById('modelSelectionContainer');
-
         const repairsArea = document.getElementById('repairsArea');
         const repairsPlaceholder = document.getElementById('repairsPlaceholder');
-        const selectedItemsList = document.getElementById('selectedItemsList');
-        const totalPriceDisplay = document.getElementById('totalPrice');
+        // const selectedItemsList = document.getElementById('selectedItemsList'); // Removed as per requirement
+        // const totalPriceDisplay = document.getElementById('totalPrice'); // Removed as per requirement
         const mainSubmissionMessage = document.getElementById('mainSubmissionMessage');
         const contactButton = document.getElementById('contactButton');
-
         const inlineContactSection = document.getElementById('inlineContactSection');
         const contactFormQuoteItems = document.getElementById('contactFormQuoteItems');
         const contactFormQuoteTotal = document.getElementById('contactFormQuoteTotal');
+        const contactFormQuoteSeparator = document.getElementById('contactFormQuoteSeparator');
 
-        // State Variables - to keep track of user selections and data
-        let currentSelectedItems = {}; // Stores currently selected repair items as an object { id: itemDetails }
-        let currentCategoryData = null; // Holds the data for the currently selected category
-        let currentBrandData = null;    // Holds the data for the currently selected brand
-        let currentModelData = null;    // Holds the data for the currently selected model
-        let selectedCategoryIcon = null; // Reference to the DOM element of the currently selected category icon
 
-        /**
-         * Toggles the visibility of an element with a smooth animation.
-         * Uses CSS classes for transitions.
-         * @param {HTMLElement} element - The HTML element to show or hide.
-         * @param {boolean} show - True to show the element, false to hide it.
-         */
+        // State Variables
+        let currentSelectedItems = {}; 
+        let currentCategoryData = null; 
+        let currentBrandData = null;    
+        let currentModelData = null;    
+        let selectedCategoryIcon = null; 
+
         function toggleElementVisibility(element, show) {
             if (show) {
-                element.style.display = 'block'; // Make element block for animation
-                // Short timeout to allow 'display: block' to apply before adding transition classes
+                element.style.display = 'block'; 
                 setTimeout(() => {
                     element.classList.remove('hidden-integrated');
                     element.classList.add('visible-integrated');
@@ -2948,192 +2943,146 @@
             } else {
                 element.classList.remove('visible-integrated');
                 element.classList.add('hidden-integrated');
-                // After animation, set display to none to collapse space
                 setTimeout(() => {
-                    if (!element.classList.contains('visible-integrated')) { // Check if it wasn't re-shown quickly
+                    if (!element.classList.contains('visible-integrated')) { 
                         element.style.display = 'none';
                     }
-                }, 500); // Duration should match the CSS transition time for max-height
+                }, 500); 
             }
         }
 
-        /**
-         * Populates the category selection area with clickable icon cards.
-         * Reads from servicesData to create these icons.
-         */
         function populateCategories() {
-            categoryIconContainer.innerHTML = ''; // Clear any existing icons first
+            categoryIconContainer.innerHTML = ''; 
             servicesData.forEach((category, index) => {
                 const iconCard = document.createElement('div');
-                iconCard.className = 'category-icon-card'; // Apply styling for the card
-                iconCard.dataset.categoryIndex = index; // Store index to retrieve category data later
+                iconCard.className = 'category-icon-card'; 
+                iconCard.dataset.categoryIndex = index; 
 
-                const defaultIconHTML = `<i class="fas fa-tools"></i>`; // Fallback icon
+                const defaultIconHTML = `<i class="fas fa-tools"></i>`; 
                 iconCard.innerHTML = `
                     ${category.iconSVG || defaultIconHTML}
                     <span>${category.categoryName}</span>
                 `;
-
-                // Add click listener to handle category selection
                 iconCard.addEventListener('click', () => handleCategoryIconClick(index, iconCard));
                 categoryIconContainer.appendChild(iconCard);
             });
         }
 
-        /**
-         * Handles the click event on a category icon.
-         * Updates UI and state based on the selected category.
-         * @param {number} categoryIndex - The index of the selected category in servicesData.
-         * @param {HTMLElement} clickedIconElement - The DOM element of the clicked icon.
-         */
         function handleCategoryIconClick(categoryIndex, clickedIconElement) {
-            // Deselect previously selected icon, if any
             if (selectedCategoryIcon) {
                 selectedCategoryIcon.classList.remove('selected');
             }
-            // Select the new icon
             clickedIconElement.classList.add('selected');
             selectedCategoryIcon = clickedIconElement;
 
-            // Reset subsequent selection dropdowns and the repairs area
             resetAndHideDropdown(brandSelect, brandSelectionContainer, "-- Choose a Brand --");
             resetAndHideDropdown(modelSelect, modelSelectionContainer, "-- Choose a Model --");
             resetRepairsArea();
-            currentSelectedItems = {}; // Clear any previously selected repair items
-            updateQuote(); // Refresh the quote summary
+            currentSelectedItems = {}; 
+            // updateQuote(); // No longer needed to update main summary in real-time
+            toggleElementVisibility(inlineContactSection, false); // Ensure contact section is hidden on new category selection
 
-            // If the category index is invalid, clear current category data and exit
             if (categoryIndex === "" || categoryIndex === null) {
                 currentCategoryData = null;
                 return;
             }
 
-            currentCategoryData = servicesData[categoryIndex]; // Set the currently selected category's data
-            brandSelect.innerHTML = '<option value="">-- Choose a Brand --</option>'; // Reset brand dropdown
-            // Populate the brand dropdown with brands from the selected category
+            currentCategoryData = servicesData[categoryIndex]; 
+            brandSelect.innerHTML = '<option value="">-- Choose a Brand --</option>'; 
             currentCategoryData.brands.forEach((brand, index) => {
                 const option = document.createElement('option');
-                option.value = index; // Store brand index as value
+                option.value = index; 
                 option.textContent = brand.brandName;
                 brandSelect.appendChild(option);
             });
-            brandSelect.disabled = false; // Enable the brand dropdown
-            toggleElementVisibility(brandSelectionContainer, true); // Show the brand dropdown
-            brandSelectionContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); // Scroll to the brand dropdown
+            brandSelect.disabled = false; 
+            toggleElementVisibility(brandSelectionContainer, true); 
+            brandSelectionContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); 
         }
 
-        /**
-         * Resets a dropdown select element to its default state and hides its container.
-         * @param {HTMLSelectElement} selectElement - The select dropdown element to reset.
-         * @param {HTMLElement} containerElement - The container of the select element to hide.
-         * @param {string} placeholderText - The placeholder text for the first option.
-         */
         function resetAndHideDropdown(selectElement, containerElement, placeholderText) {
-            selectElement.innerHTML = `<option value="">${placeholderText}</option>`; // Default placeholder
-            selectElement.disabled = true; // Disable the dropdown
-            toggleElementVisibility(containerElement, false); // Hide its container
+            selectElement.innerHTML = `<option value="">${placeholderText}</option>`; 
+            selectElement.disabled = true; 
+            toggleElementVisibility(containerElement, false); 
         }
 
-        /**
-         * Resets the repairs display area to its initial placeholder state.
-         * Also hides the contact section and clears submission messages.
-         */
         function resetRepairsArea() {
-            repairsArea.innerHTML = ''; // Clear current repairs
-            repairsPlaceholder.style.display = 'block'; // Show the placeholder text
-            // If placeholder was removed, re-add it
+            repairsArea.innerHTML = ''; 
+            repairsPlaceholder.style.display = 'block'; 
             if (!repairsArea.contains(repairsPlaceholder)) {
                 repairsArea.appendChild(repairsPlaceholder);
             }
-            toggleElementVisibility(inlineContactSection, false); // Hide the contact info section
-            mainSubmissionMessage.textContent = ''; // Clear any previous submission messages
+            // toggleElementVisibility(inlineContactSection, false); // Already handled by handleCategoryIconClick
+            mainSubmissionMessage.textContent = ''; 
         }
 
-        // Event Listener for Brand Selection Change
         brandSelect.addEventListener('change', (event) => {
-            const brandIndex = event.target.value; // Get selected brand index
-            // Reset model dropdown and repairs area
+            const brandIndex = event.target.value; 
             resetAndHideDropdown(modelSelect, modelSelectionContainer, "-- Choose a Model --");
             resetRepairsArea();
+            toggleElementVisibility(inlineContactSection, false); // Hide contact section on brand change
 
-            // If no brand is selected or category data is missing, clear brand data and exit
             if (brandIndex === "" || !currentCategoryData) {
                 currentBrandData = null;
                 return;
             }
 
-            currentBrandData = currentCategoryData.brands[brandIndex]; // Set current brand data
-            modelSelect.innerHTML = '<option value="">-- Choose a Model --</option>'; // Reset model dropdown
-            // Populate model dropdown with models from the selected brand
+            currentBrandData = currentCategoryData.brands[brandIndex]; 
+            modelSelect.innerHTML = '<option value="">-- Choose a Model --</option>'; 
             currentBrandData.models.forEach((model, index) => {
                 const option = document.createElement('option');
-                option.value = index; // Store model index
+                option.value = index; 
                 option.textContent = model.modelName;
                 modelSelect.appendChild(option);
             });
-            modelSelect.disabled = false; // Enable model dropdown
-            toggleElementVisibility(modelSelectionContainer, true); // Show model dropdown
-            modelSelectionContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); // Scroll to model dropdown
+            modelSelect.disabled = false; 
+            toggleElementVisibility(modelSelectionContainer, true); 
+            modelSelectionContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); 
         });
 
-        // Event Listener for Model Selection Change
         modelSelect.addEventListener('change', (event) => {
-            const modelIndex = event.target.value; // Get selected model index
-            resetRepairsArea(); // Reset repairs area
+            const modelIndex = event.target.value; 
+            resetRepairsArea();
+            toggleElementVisibility(inlineContactSection, false); // Hide contact section on model change
 
-            // If no model is selected or brand data is missing, clear model data and exit
             if (modelIndex === "" || !currentBrandData) {
                 currentModelData = null;
                 return;
             }
-            currentModelData = currentBrandData.models[modelIndex]; // Set current model data
-            displayRepairs(); // Display repair options for the selected model
-            repairsArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); // Scroll to repairs area
+            currentModelData = currentBrandData.models[modelIndex]; 
+            displayRepairs(); 
+            repairsArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); 
         });
 
-        /**
-         * Displays the repair options for the currently selected model.
-         * Creates interactive cards for each repair service.
-         */
         function displayRepairs() {
-            repairsArea.innerHTML = ''; // Clear previous repair options
-            repairsPlaceholder.style.display = 'none'; // Hide the placeholder text
+            repairsArea.innerHTML = ''; 
+            repairsPlaceholder.style.display = 'none'; 
 
-            // If no model data or repairs are available, show a message
             if (!currentModelData || !currentModelData.repairs || currentModelData.repairs.length === 0) {
                 repairsArea.innerHTML = '<p class="text-gray-500 text-center py-4">No specific repairs listed for this model.</p>';
                 return;
             }
 
             const repairsGrid = document.createElement('div');
-            repairsGrid.className = 'grid grid-cols-1 md:grid-cols-2 gap-4'; // Grid layout for repair cards
-            const selectionType = currentCategoryData.selectionType; // "single" or "multiple"
+            repairsGrid.className = 'grid grid-cols-1 md:grid-cols-2 gap-4'; 
+            const selectionType = currentCategoryData.selectionType; 
 
             currentModelData.repairs.forEach(repair => {
                 const repairWrapper = document.createElement('div');
                 repairWrapper.className = 'repair-card border border-gray-200 rounded-lg p-4 flex flex-col justify-between hover:shadow-lg transition-shadow duration-150 bg-white';
                 
-                // Sanitize repair.id to create a valid HTML id for the input element
                 const inputId = `repair-${repair.id.replace(/[^a-zA-Z0-9-_]/g, '')}`;
                 const inputType = selectionType === 'single' ? 'radio' : 'checkbox';
 
-                // --- Create Content for the Repair Card ---
-                const contentWrapper = document.createElement('div'); // Wraps name, price, description
-
-                // Name and Price
+                const contentWrapper = document.createElement('div'); 
                 const namePriceWrapper = document.createElement('div');
-                namePriceWrapper.className = 'flex justify-between items-start mb-1';
+                namePriceWrapper.className = 'flex justify-between items-start mb-1'; // Price is removed from here
                 const nameEl = document.createElement('span');
                 nameEl.textContent = repair.name;
                 nameEl.className = 'font-semibold text-gray-800 text-base';
-                const priceEl = document.createElement('span');
-                priceEl.textContent = `$${repair.price.toFixed(2)}`;
-                priceEl.className = 'text-orange-600 font-bold text-base whitespace-nowrap pl-2';
                 namePriceWrapper.appendChild(nameEl);
-                namePriceWrapper.appendChild(priceEl);
                 contentWrapper.appendChild(namePriceWrapper);
 
-                // Description (if available)
                 if (repair.description) {
                     const descriptionEl = document.createElement('p');
                     descriptionEl.textContent = repair.description;
@@ -3141,25 +3090,21 @@
                     contentWrapper.appendChild(descriptionEl);
                 }
 
-                // --- Create Input Element (Checkbox or Radio) ---
                 const inputEl = document.createElement('input');
                 inputEl.type = inputType;
                 inputEl.id = inputId;
-                // Unique name for radio button groups to ensure only one selection per group
                 const radioGroupName = `repair_radio_${currentCategoryData.categoryName.replace(/\s+/g, '')}_${currentBrandData.brandName.replace(/\s+/g, '')}_${currentModelData.modelName.replace(/\s+/g, '')}`;
                 inputEl.name = selectionType === 'single' ? radioGroupName : `repair_cb_${repair.id.replace(/[^a-zA-Z0-9-_]/g, '')}`;
                 inputEl.value = repair.id;
-                inputEl.dataset.price = repair.price;
+                inputEl.dataset.price = repair.price; 
                 inputEl.dataset.name = repair.name;
                 inputEl.dataset.description = repair.description || "";
-                inputEl.className = `${inputType === 'radio' ? 'item-radio' : 'item-checkbox'} hidden`; // Hide the actual input
+                inputEl.className = `${inputType === 'radio' ? 'item-radio' : 'item-checkbox'} hidden`; 
 
-                // --- Create Label (acts as the clickable button) ---
                 const labelEl = document.createElement('label');
-                labelEl.htmlFor = inputId; // Link label to the input
+                labelEl.htmlFor = inputId; 
                 labelEl.className = 'w-full block p-3 border-2 border-gray-300 rounded-md cursor-pointer transition-all duration-150 ease-in-out text-center text-orange-700 font-medium hover:border-amber-500 hover:bg-amber-50 mt-auto';
 
-                // Set initial visual state of the label/button based on currentSelectedItems
                 if (currentSelectedItems[repair.id]) {
                     inputEl.checked = true;
                     labelEl.textContent = 'Selected';
@@ -3169,11 +3114,8 @@
                     labelEl.textContent = 'Select this Repair';
                 }
 
-                // Event listener for when the selection (checkbox/radio) changes
                 inputEl.addEventListener('change', (event) => {
-                    handleRepairSelection(event, selectionType); // Update internal state and quote
-
-                    // Update visual state of all labels in this repair group
+                    handleRepairSelection(event, selectionType); 
                     const allInputsInGroup = document.querySelectorAll(`input[name="${inputEl.name}"]`);
                     allInputsInGroup.forEach(radioOrCheckbox => {
                         const associatedLabel = document.querySelector(`label[for="${radioOrCheckbox.id}"]`);
@@ -3185,13 +3127,11 @@
                             } else {
                                 associatedLabel.textContent = 'Select this Repair';
                                 associatedLabel.classList.remove('bg-amber-100', 'border-amber-500', 'text-orange-700');
-                                associatedLabel.classList.add('text-orange-700', 'hover:border-amber-500', 'hover:bg-amber-50'); // Ensure default classes are reapplied
+                                associatedLabel.classList.add('text-orange-700', 'hover:border-amber-500', 'hover:bg-amber-50'); 
                             }
                         }
                     });
                 });
-
-                // Append elements to the repair card
                 repairWrapper.appendChild(contentWrapper);
                 repairWrapper.appendChild(inputEl);
                 repairWrapper.appendChild(labelEl);
@@ -3200,12 +3140,6 @@
             repairsArea.appendChild(repairsGrid);
         }
 
-        /**
-         * Handles the selection/deselection of a repair item.
-         * Updates the currentSelectedItems object and then updates the quote.
-         * @param {Event} event - The change event from the input (checkbox/radio) element.
-         * @param {string} selectionType - 'single' (for radio) or 'multiple' (for checkbox).
-         */
         function handleRepairSelection(event, selectionType) {
             const targetInput = event.target;
             const repairId = targetInput.value;
@@ -3213,7 +3147,6 @@
             const repairPrice = parseFloat(targetInput.dataset.price);
             const repairDescription = targetInput.dataset.description;
 
-            // If selection type is 'single' (radio buttons), clear other selections within the same model's repair list
             if (selectionType === 'single') {
                 Object.keys(currentSelectedItems).forEach(id => {
                     const itemInCurrentModel = currentModelData.repairs.find(r => r.id === id);
@@ -3223,7 +3156,6 @@
                 });
             }
 
-            // Add or remove the current item from the selection
             if (targetInput.checked) {
                 currentSelectedItems[repairId] = {
                     name: repairName,
@@ -3236,60 +3168,36 @@
             } else {
                 delete currentSelectedItems[repairId];
             }
-            updateQuote(); // Update the displayed quote summary
+            // No direct DOM update here for the main summary
         }
-
+        
         /**
-         * Updates the quote summary display (selected items list and total price).
-         * Applies a 5% discount if 2 or more items are selected.
+         * Calculates the quote details including subtotal, discount, and final total.
+         * @returns {object} An object containing subtotal, discountAmount, finalTotal, and itemCount.
          */
-        function updateQuote() {
-            selectedItemsList.innerHTML = ''; // Clear previous list
+        function calculateQuoteDetails() {
             let subtotal = 0;
             const itemCount = Object.keys(currentSelectedItems).length;
 
-            if (itemCount === 0) {
-                selectedItemsList.innerHTML = '<p class="text-gray-500">No items selected yet.</p>';
-            } else {
-                const ul = document.createElement('ul');
-                ul.className = 'space-y-1 text-gray-700';
-                for (const id in currentSelectedItems) {
-                    const item = currentSelectedItems[id];
-                    const li = document.createElement('li');
-                    li.className = 'flex justify-between py-1';
-                    li.innerHTML = `<span>${item.name} <em class="text-xs text-gray-500">(${item.category} > ${item.brand} > ${item.model})</em></span> <span class="font-medium">$${item.price.toFixed(2)}</span>`;
-                    ul.appendChild(li);
-                    subtotal += item.price; 
-                }
-                selectedItemsList.appendChild(ul);
+            for (const id in currentSelectedItems) {
+                subtotal += currentSelectedItems[id].price;
             }
 
+            let discountAmount = 0;
             let finalTotal = subtotal;
+
             if (itemCount >= 2) {
-                const discountAmount = subtotal * 0.05;
+                discountAmount = subtotal * 0.05;
                 finalTotal = subtotal - discountAmount;
-                
-                const discountLi = document.createElement('li');
-                discountLi.className = 'flex justify-between py-1 text-green-600 font-medium';
-                discountLi.innerHTML = `<span>Multi-Item Discount (5%)</span> <span>-$${discountAmount.toFixed(2)}</span>`;
-                // Add the discount line after the items, but before the HR if possible, or just append
-                if(selectedItemsList.querySelector('ul')) {
-                    selectedItemsList.querySelector('ul').appendChild(document.createElement('hr')); // Visual separator
-                    selectedItemsList.querySelector('ul').appendChild(discountLi);
-                } else { // Should not happen if itemCount > 0, but as a fallback
-                    selectedItemsList.appendChild(discountLi);
-                }
             }
-            totalPriceDisplay.textContent = `$${finalTotal.toFixed(2)}`;
+            return { subtotal, discountAmount, finalTotal, itemCount };
         }
 
-        /**
-         * Shows the contact information section and populates it with the current quote details.
-         * Applies a 5% discount if 2 or more items are selected.
-         */
+
         function showContactSection() {
-            const itemCount = Object.keys(currentSelectedItems).length;
-            if (itemCount === 0) { 
+            const quoteDetails = calculateQuoteDetails(); // Get calculated details
+
+            if (quoteDetails.itemCount === 0) { 
                 mainSubmissionMessage.textContent = "Please select at least one repair to generate a quote first.";
                 mainSubmissionMessage.className = 'mt-4 text-red-600 font-medium'; 
                 setTimeout(() => { mainSubmissionMessage.textContent = ''; }, 4000); 
@@ -3297,44 +3205,41 @@
             }
             mainSubmissionMessage.textContent = ''; 
 
-            contactFormQuoteItems.innerHTML = '';
-            let contactSubtotal = 0;
+            contactFormQuoteItems.innerHTML = ''; // Clear previous items
             const ul = document.createElement('ul');
-            ul.className = 'list-disc list-inside'; 
+            ul.className = 'list-disc list-inside space-y-1'; 
             for (const id in currentSelectedItems) {
                 const item = currentSelectedItems[id];
                 const li = document.createElement('li');
                 li.innerHTML = `${item.name} (${item.model}) - <span class="font-semibold">$${item.price.toFixed(2)}</span>`;
                 ul.appendChild(li);
-                contactSubtotal += item.price;
             }
             contactFormQuoteItems.appendChild(ul);
 
-            let contactFinalTotal = contactSubtotal;
-            if (itemCount >= 2) {
-                const discountAmount = contactSubtotal * 0.05;
-                contactFinalTotal = contactSubtotal - discountAmount;
+            // Display discount if applicable
+            if (quoteDetails.itemCount >= 2 && quoteDetails.discountAmount > 0) {
+                contactFormQuoteSeparator.style.display = 'block'; // Show separator
                 const discountLi = document.createElement('li');
-                discountLi.className = 'text-green-600 font-medium mt-1'; // Added some margin top
-                discountLi.style.listStyleType = 'none'; // Remove bullet for discount line
-                discountLi.innerHTML = `Multi-Item Discount (5%): -$${discountAmount.toFixed(2)}`;
-                contactFormQuoteItems.appendChild(discountLi);
+                discountLi.className = 'text-green-600 font-medium mt-1'; 
+                discountLi.style.listStyleType = 'none'; 
+                discountLi.innerHTML = `Multi-Item Discount (5%): <span class="font-semibold">-$${quoteDetails.discountAmount.toFixed(2)}</span>`;
+                ul.appendChild(discountLi); 
+            } else {
+                 contactFormQuoteSeparator.style.display = 'none'; // Hide separator if no discount
             }
-            contactFormQuoteTotal.textContent = `$${contactFinalTotal.toFixed(2)}`; 
+            
+            contactFormQuoteTotal.textContent = `$${quoteDetails.finalTotal.toFixed(2)}`; 
 
             toggleElementVisibility(inlineContactSection, true); 
             inlineContactSection.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
         }
 
-        // Initial setup when the DOM is fully loaded
         document.addEventListener('DOMContentLoaded', () => {
             populateCategories(); 
-            updateQuote(); 
-
+            // No initial updateQuote() call for the main summary
             resetAndHideDropdown(brandSelect, brandSelectionContainer, "-- Choose a Brand --");
             resetAndHideDropdown(modelSelect, modelSelectionContainer, "-- Choose a Model --");
             toggleElementVisibility(inlineContactSection, false);
-
             contactButton.addEventListener('click', showContactSection);
         });
     </script>
