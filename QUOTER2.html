@@ -137,12 +137,12 @@
         </div>
 
         <div id="repairsArea" class="mb-6 min-h-[200px] max-h-[50vh] overflow-y-auto p-1">
-            <p id="repairsPlaceholder" class="text-gray-500 text-center py-4">Please complete selections to see quote. You may choose multiple repairs of the same service category.</p>
+            <p id="repairsPlaceholder" class="text-gray-500 text-center py-4">Please complete selections to see repair options. You may choose multiple repairs of the same service category.</p>
             </div>
 
         <div class="mt-8 text-center">
             <button id="contactButton" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-8 rounded-lg shadow-md transition duration-150 ease-in-out text-lg">
-                Click for Quote and Contact Info
+                Click for Quote and Contact Info to Proceed with Repair
             </button>
             <p id="mainSubmissionMessage" class="mt-4 text-red-600 font-medium"></p>
         </div>
@@ -157,7 +157,6 @@
                     <h3 class="text-xl font-semibold text-gray-700 mb-3">Our Information</h3>
                     <ul class="space-y-2 text-gray-600">
                         <li><strong>Phone:</strong> <a href="tel:+16316062349" class="text-orange-600 hover:text-orange-700">(631) 606-2FIX (2349)</a></li>
-			<li><strong>Phone:</strong> <a href="tel:+16318555555" class="text-orange-600 hover:text-orange-700">(631) 855-5555</a></li>    
                         <li><strong>Email:</strong> <a href="mailto:jwselectronicsrepair@gmail.com" class="text-orange-600 hover:text-orange-700">jwselectronicsrepair@gmail.com</a></li>
                         <li><strong>Address:</strong> 1167 Deer Park Ave, North Babylon, NY 11703</li>
                         <li><strong>Exact Location:</strong> Inside the Wireless Shack, Next to Sushi Express, on the North end of the Stables Gardens Strip, closer to Naz's Halal</li>
@@ -176,10 +175,10 @@
                             Mail-In Repair Form
                         </a>
                     </div>
-                    <p class="text-xs text-center mt-4 text-gray-500">Please mention this quote when contacting us. Prices can change at any time and all repairs are subject to NY State sales tax.</p>
+                    <p class="text-xs text-center mt-4 text-gray-500">Please mention this quote when contacting us. Prices are subject to change at any time and are not always 100% accurate.</p>
                 </div>
             </div>
-            <p class="text-center text-gray-700 mt-6">Please Call, Text, E-Mail, Visit us or Mail in device with to proceed with your repair.</p>
+            <p class="text-center text-gray-700 mt-6">Please call, text, email, or visit us with your quote details to proceed with your repair.</p>
         </div>
     </div>
 
@@ -2900,7 +2899,7 @@
         ];
            // --- END OF SERVICE DATA ---
 
-        // DOM Element References
+       // DOM Element References
         const categoryIconContainer = document.getElementById('categoryIconContainer');
         const brandSelect = document.getElementById('brandSelect');
         const modelSelect = document.getElementById('modelSelect');
@@ -2914,7 +2913,7 @@
         const contactFormQuoteItems = document.getElementById('contactFormQuoteItems');
         const contactFormQuoteTotal = document.getElementById('contactFormQuoteTotal');
         const contactFormQuoteSeparator = document.getElementById('contactFormQuoteSeparator');
-        const mailInFormButton = document.getElementById('mailInFormButton'); // Get the mail-in button
+        const mailInFormButton = document.getElementById('mailInFormButton'); 
 
 
         // State Variables
@@ -3192,14 +3191,14 @@
             contactFormQuoteItems.innerHTML = ''; 
             const ul = document.createElement('ul');
             ul.className = 'list-disc list-inside space-y-1'; 
-            let itemsParamArray = []; // Array to hold item strings for URL parameter
+            let itemsParamArray = []; 
 
             for (const id in currentSelectedItems) {
                 const item = currentSelectedItems[id];
                 const li = document.createElement('li');
                 li.innerHTML = `${item.name} (${item.model}) - <span class="font-semibold">$${item.price.toFixed(2)}</span>`;
                 ul.appendChild(li);
-                itemsParamArray.push(`${item.name} (${item.model})`); // Add item to array for URL
+                itemsParamArray.push(`${item.name} (${item.model})`); 
             }
             contactFormQuoteItems.appendChild(ul);
 
@@ -3216,16 +3215,16 @@
             
             contactFormQuoteTotal.textContent = `$${quoteDetails.finalTotal.toFixed(2)}`; 
 
-            // --- Construct URL for Mail-In Form Button ---
             const baseMailInUrl = 'https://www.jwselectronicsrepair.com/mail-in-form';
             const params = new URLSearchParams();
             params.append('total', quoteDetails.finalTotal.toFixed(2));
-            params.append('items', itemsParamArray.join('; ')); // Join items with a semicolon and space
+            params.append('items', itemsParamArray.join('; ')); 
             if (quoteDetails.discountAmount > 0) {
                 params.append('discount', quoteDetails.discountAmount.toFixed(2));
             }
-            mailInFormButton.href = `${baseMailInUrl}?${params.toString()}`;
-            // --- End of URL Construction ---
+            const generatedUrl = `${baseMailInUrl}?${params.toString()}`;
+            mailInFormButton.href = generatedUrl;
+            console.log("Quote Tool - Generated Mail-In URL:", generatedUrl); // For debugging on the quote tool page
 
             toggleElementVisibility(inlineContactSection, true); 
             inlineContactSection.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
