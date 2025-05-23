@@ -223,9 +223,9 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Get URL parameters
             const urlParams = new URLSearchParams(window.location.search);
-            const total = urlParams.get('total');
+            const totalParam = urlParams.get('total');
             const itemsString = urlParams.get('items');
-            const discount = urlParams.get('discount');
+            const discountParam = urlParams.get('discount');
 
             const quoteDetailsSection = document.getElementById('quoteDetailsSection');
             const quotedItemsListDiv = document.getElementById('quotedItemsList');
@@ -234,45 +234,72 @@
             const quoteDetailsSeparator = document.getElementById('quoteDetailsSeparator');
             const problemDescriptionTextarea = document.getElementById('problemDescription');
 
-            let hasQuoteDetails = false;
+            let hasAnyQuoteData = false;
+            let problemDescContent = "";
+
+            // Clear any previous dynamic content
+            quotedItemsListDiv.innerHTML = ''; 
+            quotedDiscountDiv.style.display = 'none';
+            quotedDiscountDiv.textContent = ''; // Clear text content too
+            quoteDetailsSeparator.style.display = 'none';
+            quotedTotalSpan.textContent = ''; // Clear text content
 
             if (itemsString) {
-                hasQuoteDetails = true;
-                const itemsArray = itemsString.split('; '); // Assuming items are separated by "; "
+                hasAnyQuoteData = true;
+                const itemsArray = itemsString.split('; '); 
                 const ul = document.createElement('ul');
-                ul.className = 'list-disc list-inside';
+                ul.className = 'list-disc list-inside space-y-1';
+                
+                problemDescContent += "Services from online quote:\n";
                 itemsArray.forEach(itemText => {
-                    const li = document.createElement('li');
-                    li.textContent = itemText;
-                    ul.appendChild(li);
+                    if (itemText.trim() !== "") { // Ensure itemText is not empty
+                        const li = document.createElement('li');
+                        li.textContent = itemText.trim();
+                        ul.appendChild(li);
+                        problemDescContent += `- ${itemText.trim()}\n`;
+                    }
                 });
-                quotedItemsListDiv.appendChild(ul);
-
-                // Pre-fill problem description with quoted items
-                if (problemDescriptionTextarea) {
-                    problemDescriptionTextarea.value = "Services from online quote:\n- " + itemsArray.join("\n- ");
+                if (ul.hasChildNodes()) { // Only append ul if it has items
+                    quotedItemsListDiv.appendChild(ul);
+                } else if (itemsArray.length === 1 && itemsArray[0].trim() === "") {
+                    // if itemsString was just "; " or empty, treat as no items
+                    hasAnyQuoteData = false; 
                 }
             }
 
-            if (discount && parseFloat(discount) > 0) {
-                hasQuoteDetails = true;
-                quotedDiscountDiv.textContent = `Discount Applied: -$${parseFloat(discount).toFixed(2)}`;
+            if (discountParam && parseFloat(discountParam) > 0) {
+                hasAnyQuoteData = true;
+                const discountValue = parseFloat(discountParam);
+                quotedDiscountDiv.textContent = `Discount Applied: -$${discountValue.toFixed(2)}`;
                 quotedDiscountDiv.style.display = 'block';
-                quoteDetailsSeparator.style.display = 'block';
-            } else {
-                quotedDiscountDiv.style.display = 'none';
+                if (problemDescContent) problemDescContent += `\nDiscount Applied: -$${discountValue.toFixed(2)}\n`;
             }
 
-            if (total) {
-                hasQuoteDetails = true;
-                quotedTotalSpan.textContent = `$${parseFloat(total).toFixed(2)}`;
+            if (totalParam) {
+                hasAnyQuoteData = true;
+                const totalValue = parseFloat(totalParam);
+                quotedTotalSpan.textContent = `$${totalValue.toFixed(2)}`;
+                if (problemDescContent) problemDescContent += `\nQuoted Total: $${totalValue.toFixed(2)}`;
             }
-            
-            if (hasQuoteDetails) {
+
+            if (problemDescriptionTextarea && problemDescContent.trim() !== "Services from online quote:") {
+                 problemDescriptionTextarea.value = problemDescContent.trim();
+            } else if (problemDescriptionTextarea && problemDescContent.trim() === "Services from online quote:" && (!itemsString || itemsString.trim() === "")) {
+                // If itemsString was empty, don't put default "Services from online quote:" text
+                problemDescriptionTextarea.value = "";
+            }
+
+
+            if (hasAnyQuoteData) {
                 quoteDetailsSection.style.display = 'block';
-                 if (!discount || parseFloat(discount) <= 0) { // Hide separator if no discount
+                // Show separator only if there are items AND a discount
+                if (quotedItemsListDiv.hasChildNodes() && discountParam && parseFloat(discountParam) > 0) {
+                     quoteDetailsSeparator.style.display = 'block';
+                } else {
                     quoteDetailsSeparator.style.display = 'none';
                 }
+            } else {
+                quoteDetailsSection.style.display = 'none'; 
             }
 
             // Set current date for the date input
@@ -280,7 +307,7 @@
             if (dateInput) {
                 const today = new Date();
                 const yyyy = today.getFullYear();
-                const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+                const mm = String(today.getMonth() + 1).padStart(2, '0'); 
                 const dd = String(today.getDate()).padStart(2, '0');
                 dateInput.value = `${yyyy}-${mm}-${dd}`;
             }
@@ -289,6 +316,7 @@
 
 </body>
 </html>
+
 
 
 
