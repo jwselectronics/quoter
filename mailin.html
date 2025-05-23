@@ -237,7 +237,7 @@
             const problemDescriptionTextarea = document.getElementById('problemDescription');
 
             let hasAnyQuoteData = false;
-            let problemDescContent = "";
+            let problemDescLines = []; // Use an array to build description lines
 
             // Clear any previous dynamic content
             quotedItemsListDiv.innerHTML = ''; 
@@ -252,13 +252,14 @@
                 const ul = document.createElement('ul');
                 ul.className = 'list-disc list-inside space-y-1';
                 
-                problemDescContent += "Services from online quote:\n";
+                problemDescLines.push("Services from online quote:");
                 itemsArray.forEach(itemText => {
-                    if (itemText.trim() !== "") { 
+                    const trimmedItem = itemText.trim();
+                    if (trimmedItem !== "") { 
                         const li = document.createElement('li');
-                        li.textContent = itemText.trim();
+                        li.textContent = trimmedItem;
                         ul.appendChild(li);
-                        problemDescContent += `- ${itemText.trim()}\n`;
+                        problemDescLines.push(`- ${trimmedItem}`);
                     }
                 });
                 if (ul.hasChildNodes()) { 
@@ -269,28 +270,20 @@
             if (discountParam && parseFloat(discountParam) > 0) {
                 hasAnyQuoteData = true;
                 const discountValue = parseFloat(discountParam);
-                quotedDiscountDiv.textContent = `Multi-Item Discount Applied: -$${discountValue.toFixed(2)}`; // Clarified text
+                quotedDiscountDiv.textContent = `Multi-Item Discount Applied: -$${discountValue.toFixed(2)}`;
                 quotedDiscountDiv.style.display = 'block';
-                if (problemDescContent.includes("Services from online quote:")) { // Add to existing content if items were listed
-                    problemDescContent += `\nDiscount Applied: -$${discountValue.toFixed(2)}\n`;
-                } else { // If no items, start new content for discount
-                    problemDescContent = `Discount Applied: -$${discountValue.toFixed(2)}\n`;
-                }
+                problemDescLines.push(`Discount Applied: -$${discountValue.toFixed(2)}`);
             }
 
             if (totalParam) {
                 hasAnyQuoteData = true;
                 const totalValue = parseFloat(totalParam);
                 quotedTotalSpan.textContent = `$${totalValue.toFixed(2)}`;
-                 if (problemDescContent.includes("Services from online quote:") || problemDescContent.includes("Discount Applied:")) {
-                    problemDescContent += `\nQuoted Total: $${totalValue.toFixed(2)}`;
-                } else {
-                    problemDescContent = `Quoted Total: $${totalValue.toFixed(2)}`;
-                }
+                problemDescLines.push(`Quoted Total: $${totalValue.toFixed(2)}`);
             }
 
-            if (problemDescriptionTextarea && problemDescContent.trim() !== "") {
-                 problemDescriptionTextarea.value = problemDescContent.trim();
+            if (problemDescriptionTextarea && problemDescLines.length > 0) {
+                 problemDescriptionTextarea.value = problemDescLines.join("\n");
             }
 
 
@@ -310,7 +303,7 @@
             const dateInput = document.getElementById('date');
             if (dateInput) {
                 const today = new Date();
-                const yyyy = today.getFullYear();
+                const yyyy = today.getFullYear(); // Corrected from YYYY
                 const mm = String(today.getMonth() + 1).padStart(2, '0'); 
                 const dd = String(today.getDate()).padStart(2, '0');
                 dateInput.value = `${yyyy}-${mm}-${dd}`;
@@ -320,6 +313,7 @@
 
 </body>
 </html>
+
 
 
 
