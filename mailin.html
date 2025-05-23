@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mail-in Repair Form</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* Custom font for better aesthetics */
         body {
@@ -15,22 +17,38 @@
         .form-container {
             max-width: 800px; /* Adjust as needed for larger screens */
         }
-        /* Hide print instructions when printing */
+        /* Hide print instructions and non-form elements when printing */
         @media print {
             .no-print {
                 display: none !important;
             }
             body {
                 background-color: #fff; /* White background for printing */
+                padding: 0;
+                margin: 0;
             }
             .form-container {
                 box-shadow: none; /* No shadow on print */
                 border: 1px solid #ccc; /* Light border for print */
                 padding: 15px; /* Adjusted padding for print */
+                margin: 0;
+                width: 100%;
+                max-width: 100%;
+                border-radius: 0;
             }
             input, textarea, select {
                 border: 1px solid #ccc !important; /* Ensure borders are visible on print */
                 padding: 4px !important; /* Adjusted padding for print */
+                font-size: 10pt; /* Adjust font size for print */
+            }
+            label, p, h1, h2, h3, address {
+                font-size: 10pt; /* Adjust font size for print */
+            }
+            button {
+                display: none !important; /* Hide buttons on print */
+            }
+            .page-break-before {
+                page-break-before: always;
             }
         }
     </style>
@@ -41,6 +59,15 @@
         <p class="text-center text-gray-600 mb-6 text-sm sm:text-base">
             Please fill out this form completely and include it with your device when mailing it in for repair.
         </p>
+
+        <div id="quoteDetailsSection" class="mb-6 p-4 border border-blue-200 rounded-md bg-blue-50" style="display: none;">
+            <h2 class="text-xl sm:text-2xl font-semibold text-blue-700 mb-3">Online Quote Details</h2>
+            <div id="quotedItemsList" class="mb-2 text-sm text-gray-700 space-y-1"></div>
+            <div id="quotedDiscount" class="text-sm text-green-600 font-medium" style="display: none;"></div>
+            <hr id="quoteDetailsSeparator" class="my-2 border-blue-200" style="display: none;">
+            <p class="text-right font-bold text-blue-600 text-lg">Quoted Total: <span id="quotedTotal"></span></p>
+            <p class="text-xs text-center mt-3 text-gray-500">This is an estimate. Final price will be confirmed after device inspection.</p>
+        </div>
 
         <form>
             <div class="mb-6 p-4 border border-gray-200 rounded-md bg-gray-50">
@@ -89,7 +116,7 @@
                     <div>
                         <label for="brand" class="block text-gray-700 text-sm font-bold mb-1">Brand:</label>
                         <input type="text" id="brand" name="brand" placeholder="Apple, Samsung, Dell, etc."
-                               class="shadow appearance-none border rounded-md w-full py-1.5 px-2.5 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-2 focus:ring-blue-400" required>
+                               class="shadow appearance-none border rounded-md w-full py-1.5 px-2.5 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-400" required>
                     </div>
                     <div>
                         <label for="model" class="block text-gray-700 text-sm font-bold mb-1">Model:</label>
@@ -103,8 +130,8 @@
                     </div>
                 </div>
                 <div class="mt-3">
-                    <label for="problemDescription" class="block text-gray-700 text-sm font-bold mb-1">Describe the Problem:</label>
-                    <textarea id="problemDescription" name="problemDescription" rows="4" placeholder="e.g., Screen is cracked, device won't turn on, battery drains quickly, etc."
+                    <label for="problemDescription" class="block text-gray-700 text-sm font-bold mb-1">Describe the Problem (or paste quoted services):</label>
+                    <textarea id="problemDescription" name="problemDescription" rows="4" placeholder="e.g., Screen is cracked, device won't turn on, battery drains quickly, etc. Or paste services from online quote."
                               class="shadow appearance-none border rounded-md w-full py-1.5 px-2.5 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-400" required></textarea>
                 </div>
                 <div class="mt-3">
@@ -120,7 +147,7 @@
                 <div class="flex items-start mb-3">
                     <input type="checkbox" id="termsAccepted" name="termsAccepted" class="mt-1 mr-2 accent-blue-500" required>
                     <label for="termsAccepted" class="text-gray-700 text-sm">
-                        I agree to the <a href="https://www.jwselectronicsrepair.com/legal-notice" class="text-blue-600 hover:underline">repair terms and conditions</a>. I understand that I am responsible for backing up my data before sending the device, and that data loss may occur during the repair process.
+                        I agree to the <a href="https://www.jwselectronicsrepair.com/legal-notice" target="_blank" class="text-blue-600 hover:underline">repair terms and conditions</a>. I understand that I am responsible for backing up my data before sending the device, and that data loss may occur during the repair process.
                     </label>
                 </div>
                 <div class="mt-4">
@@ -147,7 +174,7 @@
                 <p class="text-gray-700 mb-1.5 text-sm">
                     3.  <strong>Ship to:</strong>
                 </p>
-                <address class="text-gray-800 font-semibold ml-4 text-sm">
+                <address class="text-gray-800 font-semibold ml-4 text-sm not-italic">
                     JWS Electronics Repair<br>
                     1167 deer park ave.<br>
                     North Babylon, NY 11703<br>
@@ -191,5 +218,77 @@
             </div>
         </form>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const total = urlParams.get('total');
+            const itemsString = urlParams.get('items');
+            const discount = urlParams.get('discount');
+
+            const quoteDetailsSection = document.getElementById('quoteDetailsSection');
+            const quotedItemsListDiv = document.getElementById('quotedItemsList');
+            const quotedDiscountDiv = document.getElementById('quotedDiscount');
+            const quotedTotalSpan = document.getElementById('quotedTotal');
+            const quoteDetailsSeparator = document.getElementById('quoteDetailsSeparator');
+            const problemDescriptionTextarea = document.getElementById('problemDescription');
+
+            let hasQuoteDetails = false;
+
+            if (itemsString) {
+                hasQuoteDetails = true;
+                const itemsArray = itemsString.split('; '); // Assuming items are separated by "; "
+                const ul = document.createElement('ul');
+                ul.className = 'list-disc list-inside';
+                itemsArray.forEach(itemText => {
+                    const li = document.createElement('li');
+                    li.textContent = itemText;
+                    ul.appendChild(li);
+                });
+                quotedItemsListDiv.appendChild(ul);
+
+                // Pre-fill problem description with quoted items
+                if (problemDescriptionTextarea) {
+                    problemDescriptionTextarea.value = "Services from online quote:\n- " + itemsArray.join("\n- ");
+                }
+            }
+
+            if (discount && parseFloat(discount) > 0) {
+                hasQuoteDetails = true;
+                quotedDiscountDiv.textContent = `Discount Applied: -$${parseFloat(discount).toFixed(2)}`;
+                quotedDiscountDiv.style.display = 'block';
+                quoteDetailsSeparator.style.display = 'block';
+            } else {
+                quotedDiscountDiv.style.display = 'none';
+            }
+
+            if (total) {
+                hasQuoteDetails = true;
+                quotedTotalSpan.textContent = `$${parseFloat(total).toFixed(2)}`;
+            }
+            
+            if (hasQuoteDetails) {
+                quoteDetailsSection.style.display = 'block';
+                 if (!discount || parseFloat(discount) <= 0) { // Hide separator if no discount
+                    quoteDetailsSeparator.style.display = 'none';
+                }
+            }
+
+            // Set current date for the date input
+            const dateInput = document.getElementById('date');
+            if (dateInput) {
+                const today = new Date();
+                const yyyy = today.getFullYear();
+                const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+                const dd = String(today.getDate()).padStart(2, '0');
+                dateInput.value = `${yyyy}-${mm}-${dd}`;
+            }
+        });
+    </script>
+
 </body>
 </html>
+
+
+
