@@ -223,7 +223,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Get URL parameters
             const urlParams = new URLSearchParams(window.location.search);
-            console.log("URL Parameters found:", urlParams.toString()); // For debugging
+            console.log("Mail-In Form - URL Parameters found:", urlParams.toString()); // For debugging
 
             const totalParam = urlParams.get('total');
             const itemsString = urlParams.get('items');
@@ -237,7 +237,7 @@
             const problemDescriptionTextarea = document.getElementById('problemDescription');
 
             let hasAnyQuoteData = false;
-            let problemDescLines = []; // Use an array to build description lines
+            let problemDescLines = []; 
 
             // Clear any previous dynamic content
             quotedItemsListDiv.innerHTML = ''; 
@@ -283,13 +283,12 @@
             }
 
             if (problemDescriptionTextarea && problemDescLines.length > 0) {
-                 problemDescriptionTextarea.value = problemDescLines.join("\n");
+                 problemDescriptionTextarea.value = problemDescLines.join("\n").trim();
             }
 
 
             if (hasAnyQuoteData) {
                 quoteDetailsSection.style.display = 'block';
-                // Show separator only if there are items AND a discount
                 if (quotedItemsListDiv.hasChildNodes() && discountParam && parseFloat(discountParam) > 0) {
                      quoteDetailsSeparator.style.display = 'block';
                 } else {
@@ -303,7 +302,7 @@
             const dateInput = document.getElementById('date');
             if (dateInput) {
                 const today = new Date();
-                const yyyy = today.getFullYear(); // Corrected from YYYY
+                const yyyy = today.getFullYear(); // Corrected variable name
                 const mm = String(today.getMonth() + 1).padStart(2, '0'); 
                 const dd = String(today.getDate()).padStart(2, '0');
                 dateInput.value = `${yyyy}-${mm}-${dd}`;
@@ -313,6 +312,7 @@
 
 </body>
 </html>
+
 
 
 
