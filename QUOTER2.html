@@ -84,69 +84,103 @@
         }
         .category-icon-card.selected span { color: #c2410c; font-weight: 600; }
 
-        /* --- REVISED PRINT STYLES --- */
+        /* --- REVISED PRINT STYLES V3 --- */
         @media print {
-            body * { /* Hide everything by default for printing */
-                visibility: hidden;
+            body {
+                background-color: #fff !important; 
+                margin: 0 !important;
+                padding: 0 !important; 
             }
-            /* Make the specific mail-in form section and its children visible */
-            #integratedMailInSection, #integratedMailInSection * {
-                visibility: visible;
+            /* Hide everything on the page initially */
+            body > * {
+                display: none !important;
             }
-            /* Position the mail-in form section at the top of the printed page */
+            /* Show the main wrapper for the quote tool */
+            #quoteToolWrapper {
+                display: block !important;
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important; /* Ensure it takes full width for print context */
+                max-width: 100% !important;
+            }
+            /* Within the quote tool wrapper, hide everything except the integrated mail-in section */
+            #quoteToolWrapper > *:not(#integratedMailInSection) {
+                display: none !important;
+            }
+            /* Ensure the mail-in section itself is displayed as a block and flows naturally */
             #integratedMailInSection {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
+                display: block !important;
+                visibility: visible !important;
+                position: static !important; /* Critical for natural flow in print */
+                width: 100% !important; /* Take full width of its container */
                 margin: 0 !important;
                 padding: 10px !important; 
                 border: none !important;
+                box-shadow: none !important;
+                 /* Ensure children are visible if parent visibility was changed */
+                & * { 
+                    visibility: visible !important;
+                }
             }
-            /* Ensure the content wrapper inside is styled for print */
             .mail-in-form-content-wrapper {
+                visibility: visible !important;
+                display: block !important;
+                box-shadow: none !important;
                 border: 1px solid #ccc !important; 
                 padding: 15px !important;
-                box-shadow: none !important;
+                margin: 0 !important;
+                background-color: #fff !important;
             }
-            body { 
-                background-color: #fff !important; 
-            }
-            /* Style form elements for print */
             input, textarea, select {
                 border: 1px solid #ccc !important;
                 padding: 4px !important;
                 font-size: 10pt !important;
                 background-color: #fff !important; 
                 color: #000 !important; 
-                -webkit-print-color-adjust: exact; /* Ensure background and color print in Chrome/Safari */
-                print-color-adjust: exact; /* Standard property */
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
             }
-            /* Style text elements for print */
             label, p, h1, h2, h3, address, li, span, strong, em { 
                 font-size: 10pt !important;
                 color: #000 !important;
                 background-color: transparent !important; 
             }
-             /* Hide elements specifically marked not for printing within the form */
             .no-print-in-form { 
                 display: none !important; 
             }
             #quoteDetailsSectionMailIn {
                 margin-bottom: 20px !important;
+                background-color: #f9fafb !important;
             }
-             /* Ensure links are visible and styled for print */
             a, a:visited {
                 color: #000 !important; 
                 text-decoration: underline !important;
             }
+             /* Reset Tailwind's responsive padding/margins that might interfere */
+            .p-2, .sm\:p-4, .md\:p-6, .lg\:p-8, 
+            .mt-4, .mb-4, .mt-10, .pt-8, .p-6, .md\:p-8, 
+            .mb-6, .mb-5, .mt-8, .mt-6, .mb-3, .mt-2, .mt-1 {
+                padding: 0 !important;
+                margin: 0 !important;
+                /* Add back essential margins/paddings for the form content if needed within this print block */
+            }
+             #quoteDetailsSectionMailIn, 
+             .mail-in-form-content-wrapper form > div { /* Targetting sections within the form */
+                margin-bottom: 15px !important; /* Restore some spacing */
+             }
+             .mail-in-form-content-wrapper h2, .mail-in-form-content-wrapper h3 {
+                 margin-bottom: 10px !important;
+             }
+
         }
         /* --- END OF REVISED PRINT STYLES --- */
     </style>
 </head>
 <body class="bg-gray-100 p-4 md:p-8 flex justify-center items-start min-h-screen">
 
-    <div class="w-full max-w-3xl bg-white shadow-xl rounded-lg p-6 md:p-8">
+    <div id="quoteToolWrapper" class="w-full max-w-3xl bg-white shadow-xl rounded-lg p-6 md:p-8"> 
         <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">JWS Electronics Repair</h1>
         <h2 class="text-xl text-center text-orange-600 mb-8">Get an Instant Quote</h2>
         
