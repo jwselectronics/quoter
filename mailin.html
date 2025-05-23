@@ -223,6 +223,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Get URL parameters
             const urlParams = new URLSearchParams(window.location.search);
+            console.log("URL Parameters found:", urlParams.toString()); // For debugging
+
             const totalParam = urlParams.get('total');
             const itemsString = urlParams.get('items');
             const discountParam = urlParams.get('discount');
@@ -240,11 +242,11 @@
             // Clear any previous dynamic content
             quotedItemsListDiv.innerHTML = ''; 
             quotedDiscountDiv.style.display = 'none';
-            quotedDiscountDiv.textContent = ''; // Clear text content too
+            quotedDiscountDiv.textContent = ''; 
             quoteDetailsSeparator.style.display = 'none';
-            quotedTotalSpan.textContent = ''; // Clear text content
+            quotedTotalSpan.textContent = ''; 
 
-            if (itemsString) {
+            if (itemsString && itemsString.trim() !== "") {
                 hasAnyQuoteData = true;
                 const itemsArray = itemsString.split('; '); 
                 const ul = document.createElement('ul');
@@ -252,41 +254,43 @@
                 
                 problemDescContent += "Services from online quote:\n";
                 itemsArray.forEach(itemText => {
-                    if (itemText.trim() !== "") { // Ensure itemText is not empty
+                    if (itemText.trim() !== "") { 
                         const li = document.createElement('li');
                         li.textContent = itemText.trim();
                         ul.appendChild(li);
                         problemDescContent += `- ${itemText.trim()}\n`;
                     }
                 });
-                if (ul.hasChildNodes()) { // Only append ul if it has items
+                if (ul.hasChildNodes()) { 
                     quotedItemsListDiv.appendChild(ul);
-                } else if (itemsArray.length === 1 && itemsArray[0].trim() === "") {
-                    // if itemsString was just "; " or empty, treat as no items
-                    hasAnyQuoteData = false; 
                 }
             }
 
             if (discountParam && parseFloat(discountParam) > 0) {
                 hasAnyQuoteData = true;
                 const discountValue = parseFloat(discountParam);
-                quotedDiscountDiv.textContent = `Discount Applied: -$${discountValue.toFixed(2)}`;
+                quotedDiscountDiv.textContent = `Multi-Item Discount Applied: -$${discountValue.toFixed(2)}`; // Clarified text
                 quotedDiscountDiv.style.display = 'block';
-                if (problemDescContent) problemDescContent += `\nDiscount Applied: -$${discountValue.toFixed(2)}\n`;
+                if (problemDescContent.includes("Services from online quote:")) { // Add to existing content if items were listed
+                    problemDescContent += `\nDiscount Applied: -$${discountValue.toFixed(2)}\n`;
+                } else { // If no items, start new content for discount
+                    problemDescContent = `Discount Applied: -$${discountValue.toFixed(2)}\n`;
+                }
             }
 
             if (totalParam) {
                 hasAnyQuoteData = true;
                 const totalValue = parseFloat(totalParam);
                 quotedTotalSpan.textContent = `$${totalValue.toFixed(2)}`;
-                if (problemDescContent) problemDescContent += `\nQuoted Total: $${totalValue.toFixed(2)}`;
+                 if (problemDescContent.includes("Services from online quote:") || problemDescContent.includes("Discount Applied:")) {
+                    problemDescContent += `\nQuoted Total: $${totalValue.toFixed(2)}`;
+                } else {
+                    problemDescContent = `Quoted Total: $${totalValue.toFixed(2)}`;
+                }
             }
 
-            if (problemDescriptionTextarea && problemDescContent.trim() !== "Services from online quote:") {
+            if (problemDescriptionTextarea && problemDescContent.trim() !== "") {
                  problemDescriptionTextarea.value = problemDescContent.trim();
-            } else if (problemDescriptionTextarea && problemDescContent.trim() === "Services from online quote:" && (!itemsString || itemsString.trim() === "")) {
-                // If itemsString was empty, don't put default "Services from online quote:" text
-                problemDescriptionTextarea.value = "";
             }
 
 
