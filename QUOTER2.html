@@ -137,7 +137,7 @@
         </div>
 
         <div id="repairsArea" class="mb-6 min-h-[200px] max-h-[50vh] overflow-y-auto p-1">
-            <p id="repairsPlaceholder" class="text-gray-500 text-center py-4">Please complete selections to see repair quote. You may choose multiple repairs of the same service category.</p>
+            <p id="repairsPlaceholder" class="text-gray-500 text-center py-4">Please complete selections to see quote. You may choose multiple repairs of the same service category.</p>
             </div>
 
         <div class="mt-8 text-center">
@@ -172,16 +172,17 @@
                     <hr id="contactFormQuoteSeparator" class="my-2 border-gray-300" style="display: none;">
                     <p class="text-right font-bold mt-2 text-orange-600 text-2xl">Estimated Total: <span id="contactFormQuoteTotal"></span></p>
                     <div class="mt-4 text-center">
-                        <a href="https://www.jwselectronicsrepair.com/mail-in-form" target="_blank" class="inline-block bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-6 rounded-lg shadow-sm transition duration-150 ease-in-out text-base">
+                        <a id="mailInFormButton" href="https://www.jwselectronicsrepair.com/mail-in-form" target="_blank" class="inline-block bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-6 rounded-lg shadow-sm transition duration-150 ease-in-out text-base">
                             Mail-In Repair Form
                         </a>
                     </div>
-                    <p class="text-xs text-center mt-4 text-gray-500">Please mention this quote when contacting us. Prices may change at any time and all repairs are subject to NY State sales tax.</p>
+                    <p class="text-xs text-center mt-4 text-gray-500">Please mention this quote when contacting us. Prices can change at any time and all repairs are subject to NY State sales tax.</p>
                 </div>
             </div>
-            <p class="text-center text-gray-700 mt-6">Please Call, Text, E-Mail, Visit us, or Mail in your device to proceed with your repair.</p>
+            <p class="text-center text-gray-700 mt-6">Please Call, Text, E-Mail, Visit us or Mail in device with to proceed with your repair.</p>
         </div>
     </div>
+
 <script>
         // --- SERVICE DATA for JWS Electronics Repair (NESTED STRUCTURE) ---
         // Last Updated: May 19, 2025 - Restored Computer models, removed duplicate motherboard category.
@@ -2897,6 +2898,8 @@
                 ]
             },
         ];
+           // --- END OF SERVICE DATA ---
+
         // DOM Element References
         const categoryIconContainer = document.getElementById('categoryIconContainer');
         const brandSelect = document.getElementById('brandSelect');
@@ -2911,6 +2914,7 @@
         const contactFormQuoteItems = document.getElementById('contactFormQuoteItems');
         const contactFormQuoteTotal = document.getElementById('contactFormQuoteTotal');
         const contactFormQuoteSeparator = document.getElementById('contactFormQuoteSeparator');
+        const mailInFormButton = document.getElementById('mailInFormButton'); // Get the mail-in button
 
 
         // State Variables
@@ -3188,11 +3192,14 @@
             contactFormQuoteItems.innerHTML = ''; 
             const ul = document.createElement('ul');
             ul.className = 'list-disc list-inside space-y-1'; 
+            let itemsParamArray = []; // Array to hold item strings for URL parameter
+
             for (const id in currentSelectedItems) {
                 const item = currentSelectedItems[id];
                 const li = document.createElement('li');
                 li.innerHTML = `${item.name} (${item.model}) - <span class="font-semibold">$${item.price.toFixed(2)}</span>`;
                 ul.appendChild(li);
+                itemsParamArray.push(`${item.name} (${item.model})`); // Add item to array for URL
             }
             contactFormQuoteItems.appendChild(ul);
 
@@ -3209,6 +3216,17 @@
             
             contactFormQuoteTotal.textContent = `$${quoteDetails.finalTotal.toFixed(2)}`; 
 
+            // --- Construct URL for Mail-In Form Button ---
+            const baseMailInUrl = 'https://www.jwselectronicsrepair.com/mail-in-form';
+            const params = new URLSearchParams();
+            params.append('total', quoteDetails.finalTotal.toFixed(2));
+            params.append('items', itemsParamArray.join('; ')); // Join items with a semicolon and space
+            if (quoteDetails.discountAmount > 0) {
+                params.append('discount', quoteDetails.discountAmount.toFixed(2));
+            }
+            mailInFormButton.href = `${baseMailInUrl}?${params.toString()}`;
+            // --- End of URL Construction ---
+
             toggleElementVisibility(inlineContactSection, true); 
             inlineContactSection.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
         }
@@ -3224,5 +3242,6 @@
 
 </body>
 </html>
+
 
 
