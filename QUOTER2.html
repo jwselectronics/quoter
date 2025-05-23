@@ -84,53 +84,64 @@
         }
         .category-icon-card.selected span { color: #c2410c; font-weight: 600; }
 
-        /* --- UPDATED PRINT STYLES --- */
+        /* --- REVISED PRINT STYLES --- */
         @media print {
-            body > *:not(#integratedMailInSection) { /* Hide all direct children of body except the mail-in section */
-                display: none !important;
+            body * { /* Hide everything by default for printing */
+                visibility: hidden;
             }
-            #integratedMailInSection { /* Ensure the mail-in section itself is visible and takes up space */
-                display: block !important;
-                /* Removed absolute positioning to allow natural flow for printing */
-                margin-top: 0 !important; /* Reset margin for print */
-                padding-top: 0 !important; /* Reset padding for print */
+            /* Make the specific mail-in form section and its children visible */
+            #integratedMailInSection, #integratedMailInSection * {
+                visibility: visible;
             }
-            .mail-in-form-content-wrapper { /* Ensure the content wrapper inside is visible */
-                display: block !important;
-                box-shadow: none !important;
+            /* Position the mail-in form section at the top of the printed page */
+            #integratedMailInSection {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0 !important;
+                padding: 10px !important; 
+                border: none !important;
+            }
+            /* Ensure the content wrapper inside is styled for print */
+            .mail-in-form-content-wrapper {
                 border: 1px solid #ccc !important; 
                 padding: 15px !important;
-                margin: 0 !important;
+                box-shadow: none !important;
             }
             body { 
                 background-color: #fff !important; 
-                padding: 10px !important; /* Minimal padding for print */
-                margin: 0 !important;  
             }
+            /* Style form elements for print */
             input, textarea, select {
                 border: 1px solid #ccc !important;
                 padding: 4px !important;
                 font-size: 10pt !important;
                 background-color: #fff !important; 
                 color: #000 !important; 
+                -webkit-print-color-adjust: exact; /* Ensure background and color print in Chrome/Safari */
+                print-color-adjust: exact; /* Standard property */
             }
+            /* Style text elements for print */
             label, p, h1, h2, h3, address, li, span, strong, em { 
                 font-size: 10pt !important;
                 color: #000 !important;
                 background-color: transparent !important; 
             }
-            .no-print-in-form { /* Class for elements inside the form that should not print (e.g., shipping buttons) */
-                display: none !important;
+             /* Hide elements specifically marked not for printing within the form */
+            .no-print-in-form { 
+                display: none !important; 
             }
             #quoteDetailsSectionMailIn {
                 margin-bottom: 20px !important;
             }
-            a, a:visited { /* Ensure links are visible and styled for print */
+             /* Ensure links are visible and styled for print */
+            a, a:visited {
                 color: #000 !important; 
                 text-decoration: underline !important;
             }
         }
-        /* --- END OF UPDATED PRINT STYLES --- */
+        /* --- END OF REVISED PRINT STYLES --- */
     </style>
 </head>
 <body class="bg-gray-100 p-4 md:p-8 flex justify-center items-start min-h-screen">
@@ -362,7 +373,6 @@
             </div>
         </div>
     </div>
-
 <script>
         // --- SERVICE DATA for JWS Electronics Repair (NESTED STRUCTURE) ---
         // Last Updated: May 19, 2025 - Restored Computer models, removed duplicate motherboard category.
@@ -3078,7 +3088,7 @@
                 ]
             },
         ];
-            // --- END OF SERVICE DATA ---
+          // --- END OF SERVICE DATA ---
 
         const categoryIconContainer = document.getElementById('categoryIconContainer');
         const brandSelect = document.getElementById('brandSelect');
