@@ -84,38 +84,53 @@
         }
         .category-icon-card.selected span { color: #c2410c; font-weight: 600; }
 
+        /* --- UPDATED PRINT STYLES --- */
         @media print {
-            body > *:not(.print-this-section), 
-            body > .print-this-section > *:not(.mail-in-form-content-wrapper) {
+            body > *:not(#integratedMailInSection) { /* Hide all direct children of body except the mail-in section */
                 display: none !important;
             }
-            .print-this-section {
+            #integratedMailInSection { /* Ensure the mail-in section itself is visible and takes up space */
                 display: block !important;
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
+                /* Removed absolute positioning to allow natural flow for printing */
+                margin-top: 0 !important; /* Reset margin for print */
+                padding-top: 0 !important; /* Reset padding for print */
             }
-            .mail-in-form-content-wrapper {
+            .mail-in-form-content-wrapper { /* Ensure the content wrapper inside is visible */
                 display: block !important;
                 box-shadow: none !important;
-                border: 1px solid #ccc !important;
+                border: 1px solid #ccc !important; 
                 padding: 15px !important;
                 margin: 0 !important;
             }
-            body { background-color: #fff !important; padding: 10px !important; margin: 0 !important;}
+            body { 
+                background-color: #fff !important; 
+                padding: 10px !important; /* Minimal padding for print */
+                margin: 0 !important;  
+            }
             input, textarea, select {
                 border: 1px solid #ccc !important;
                 padding: 4px !important;
                 font-size: 10pt !important;
-            }
-            label, p, h1, h2, h3, address, li, span {
-                font-size: 10pt !important;
+                background-color: #fff !important; 
                 color: #000 !important; 
             }
-            .no-print-in-form { display: none !important; }
-            #quoteDetailsSectionMailIn { margin-bottom: 20px !important; } 
+            label, p, h1, h2, h3, address, li, span, strong, em { 
+                font-size: 10pt !important;
+                color: #000 !important;
+                background-color: transparent !important; 
+            }
+            .no-print-in-form { /* Class for elements inside the form that should not print (e.g., shipping buttons) */
+                display: none !important;
+            }
+            #quoteDetailsSectionMailIn {
+                margin-bottom: 20px !important;
+            }
+            a, a:visited { /* Ensure links are visible and styled for print */
+                color: #000 !important; 
+                text-decoration: underline !important;
+            }
         }
+        /* --- END OF UPDATED PRINT STYLES --- */
     </style>
 </head>
 <body class="bg-gray-100 p-4 md:p-8 flex justify-center items-start min-h-screen">
@@ -183,7 +198,7 @@
                             Prepare Mail-In Form
                         </button>
                     </div>
-                    <p class="text-xs text-center mt-4 text-gray-500">Please mention this quote when contacting us. Prices may change at any time and all repair are subject to NY state sales tax.</p>
+                    <p class="text-xs text-center mt-4 text-gray-500">Please mention this quote when contacting us. Prices may change at any time and all repairs are subject to NY state sales tax.</p>
                 </div>
             </div>
             <p class="text-center text-gray-700 mt-6">Please Call, Text, E-Mail, Visit us or Mail in device to proceed with your repair.</p>
@@ -3063,7 +3078,7 @@
                 ]
             },
         ];
-        // --- END OF SERVICE DATA ---
+            // --- END OF SERVICE DATA ---
 
         const categoryIconContainer = document.getElementById('categoryIconContainer');
         const brandSelect = document.getElementById('brandSelect');
@@ -3482,6 +3497,3 @@
 
 </body>
 </html>
-
-
-
