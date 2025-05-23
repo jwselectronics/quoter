@@ -84,51 +84,38 @@
         }
         .category-icon-card.selected span { color: #c2410c; font-weight: 600; }
 
-        /* --- REVISED PRINT STYLES V4 (Mobile Focus) --- */
+        /* --- REVISED PRINT STYLES V6 (Chrome Mobile Focus) --- */
         @media print {
             body {
                 background-color: #fff !important; 
                 margin: 0 !important;
                 padding: 0 !important; 
-                width: 100% !important;
-                -webkit-print-color-adjust: exact !important; /* For Chrome/Safari */
-                print-color-adjust: exact !important; /* Standard */
+                width: 100% !important; /* Ensure body takes full width for print context */
+                -webkit-print-color-adjust: exact !important; 
+                print-color-adjust: exact !important; 
             }
-            /* Hide all direct children of body initially */
-            body > * {
+            /* Hide elements that are NOT the mail-in form section or its direct wrapper */
+            body > *:not(#quoteToolWrapper) {
                 display: none !important;
-                visibility: hidden !important;
             }
-            /* Make the main quote tool wrapper visible, but it will act as a container */
-            #quoteToolWrapper {
-                display: block !important;
-                visibility: visible !important;
-                box-shadow: none !important;
-                border: none !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                width: 100% !important; 
-                max-width: 100% !important;
-            }
-            /* Within the quote tool wrapper, hide everything except the integrated mail-in section */
             #quoteToolWrapper > *:not(#integratedMailInSection) {
                 display: none !important;
-                visibility: hidden !important;
             }
+
             /* Ensure the mail-in section itself is displayed as a block and flows naturally */
             #integratedMailInSection {
                 display: block !important;
                 visibility: visible !important;
-                position: static !important; 
+                position: static !important; /* Allow natural document flow */
                 width: 100% !important; 
                 margin: 0 !important;
-                padding: 10px !important; 
+                padding: 10px !important; /* Add some padding for print */
                 border: none !important;
                 box-shadow: none !important;
-                background-color: #fff !important; /* Ensure white background for the section */
+                background-color: #fff !important; 
             }
             /* Ensure the content wrapper inside is visible and styled for print */
-            .mail-in-form-content-wrapper {
+            #integratedMailInSection .mail-in-form-content-wrapper {
                 visibility: visible !important;
                 display: block !important;
                 box-shadow: none !important;
@@ -138,61 +125,58 @@
                 background-color: #fff !important;
             }
             /* Ensure all children within the mail-in form content are visible */
-            #integratedMailInSection *, 
-            .mail-in-form-content-wrapper * {
+            #integratedMailInSection .mail-in-form-content-wrapper * {
                 visibility: visible !important;
-                background-color: transparent !important; /* Prevent Tailwind bg colors from overriding */
-                color: #000 !important; /* Default all text to black */
-            }
-
-            input, textarea, select {
-                border: 1px solid #ccc !important;
-                padding: 4px !important;
-                font-size: 10pt !important;
-                background-color: #fff !important; 
+                background-color: transparent !important; 
                 color: #000 !important; 
             }
-            label, p, h1, h2, h3, address, li, span, strong, em { 
+
+            #integratedMailInSection input, 
+            #integratedMailInSection textarea, 
+            #integratedMailInSection select {
+                border: 1px solid #999 !important; 
+                padding: 4px !important;
+                font-size: 10pt !important;
+                background-color: #fff !important;
+                color: #000 !important;
+            }
+            #integratedMailInSection label, 
+            #integratedMailInSection p, 
+            #integratedMailInSection h1, 
+            #integratedMailInSection h2, 
+            #integratedMailInSection h3, 
+            #integratedMailInSection address, 
+            #integratedMailInSection li, 
+            #integratedMailInSection span, 
+            #integratedMailInSection strong, 
+            #integratedMailInSection em { 
                 font-size: 10pt !important;
                 color: #000 !important;
             }
-            /* Specific text colors for print if needed, overriding the generic black */
+            
             #quoteDetailsSectionMailIn h3, 
-            #quoteDetailsSectionMailIn .text-orange-600,
+            #quoteDetailsSectionMailIn .text-orange-600, /* These might be Tailwind specific and may not override if not specific enough */
             #quoteDetailsSectionMailIn .text-orange-700 {
-                 color: #000 !important; /* Make orange text black for print */
+                 color: #000 !important; 
             }
             #quoteDetailsSectionMailIn .text-green-600 {
-                color: #000 !important; /* Make green text black for print */
+                color: #000 !important; 
             }
-
 
             .no-print-in-form { 
                 display: none !important; 
             }
             #quoteDetailsSectionMailIn {
-                margin-bottom: 20px !important;
-                background-color: #f9fafb !important; /* Light gray for this specific section in print */
-                border: 1px dashed #ccc !important; /* Add a light border to this section */
+                margin-bottom: 15px !important;
+                padding: 10px !important;
+                border: 1px dashed #eee !important; 
+                background-color: #f9f9f9 !important; 
             }
-            a, a:visited {
+            #integratedMailInSection a, 
+            #integratedMailInSection a:visited {
                 color: #000 !important; 
                 text-decoration: underline !important;
             }
-             /* Reset Tailwind's responsive padding/margins that might interfere */
-            .p-2, .sm\:p-4, .md\:p-6, .lg\:p-8, 
-            .mt-4, .mb-4, .mt-10, .pt-8, .p-6, .md\:p-8, 
-            .mb-6, .mb-5, .mt-8, .mt-6, .mb-3, .mt-2, .mt-1 {
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-             #quoteDetailsSectionMailIn, 
-             .mail-in-form-content-wrapper form > div { /* Targetting sections within the form */
-                margin-bottom: 15px !important; /* Restore some spacing */
-             }
-             .mail-in-form-content-wrapper h2, .mail-in-form-content-wrapper h3 {
-                 margin-bottom: 10px !important;
-             }
         }
         /* --- END OF REVISED PRINT STYLES --- */
     </style>
@@ -3560,3 +3544,4 @@
 
 </body>
 </html>
+
