@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JWS Electronics Repair - Instant Price Quote</title>
+    <title>JWS Electronics Repair - Instant Price Quote & Mail-In</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* Custom scrollbar styles */
         ::-webkit-scrollbar { width: 8px; }
@@ -17,7 +18,6 @@
         body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
 
         /* Styles for selected repair items (checkbox/radio) */
-        /* When an item is checked, its label gets these styles */
         .item-checkbox:checked + label, .item-radio:checked + label {
             background-color: #fef3c7; /* Tailwind amber-100 */
             border-color: #f59e0b; /* Tailwind amber-500 */
@@ -25,90 +25,98 @@
 
         /* Styles for individual repair cards */
         .repair-card {
-            min-height: 100px; /* Adjusted min-height as price is removed */
+            min-height: 100px; 
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* Pushes select button to bottom */
+            justify-content: space-between; 
         }
 
-        /* Animation classes for showing/hiding dropdown containers */
+        /* Animation classes for showing/hiding collapsible sections */
         .hidden-integrated {
             max-height: 0;
             overflow: hidden;
             opacity: 0;
             transition: max-height 0.5s ease-out, opacity 0.3s ease-out, transform 0.3s ease-out, margin-top 0.5s ease-out, padding-top 0.5s ease-out, padding-bottom 0.5s ease-out;
-            transform: translateY(20px); /* Start slightly lower for slide-up effect */
+            transform: translateY(20px); 
             margin-top: 0 !important;
             padding-top: 0 !important;
             padding-bottom: 0 !important;
         }
         .visible-integrated {
-            max-height: 2000px; /* Large enough to accommodate content */
+            max-height: 5000px; 
             opacity: 1;
-            transform: translateY(0); /* Slide to original position */
-            margin-top: 1.5rem !important; /* Tailwind's mt-6, adjusted for better flow */
+            transform: translateY(0); 
+            margin-top: 1.5rem !important; 
             padding-top: 0rem !important;
             padding-bottom: 0rem !important;
             transition: max-height 0.7s ease-in-out, opacity 0.5s ease-in-out, transform 0.5s ease-in-out, margin-top 0.5s ease-in-out, padding-top 0.5s ease-out, padding-bottom 0.5s ease-out;
         }
 
-        /* Style for disabled select elements */
         select:disabled { 
-            background-color: #f3f4f6; /* Tailwind gray-100 */
+            background-color: #f3f4f6; 
             cursor: not-allowed; 
         }
-        /* Default styling for enabled select elements (can be overridden by Tailwind classes in HTML) */
         select:enabled {
-            background-color: white; /* Default white background for enabled select */
+            background-color: white; 
         }
 
-
-        /* Styles for Category Icons */
         .category-icon-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem; /* p-4 */
-            border-width: 2px;
-            border-color: #e5e7eb; /* gray-200 */
-            border-radius: 0.5rem; /* rounded-lg */
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            background-color: white;
-            min-height: 130px; /* Ensure consistent height */
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 1rem; border-width: 2px; border-color: #e5e7eb; 
+            border-radius: 0.5rem; cursor: pointer; transition: all 0.2s ease-in-out;
+            background-color: white; min-height: 130px; 
         }
         .category-icon-card:hover {
-            border-color: #f59e0b; /* Tailwind amber-500 */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+            border-color: #f59e0b; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); 
         }
-        .category-icon-card.selected { /* Style for the selected category icon */
-            border-color: #d97706; /* Tailwind amber-600 */
-            background-color: #fef3c7; /* Tailwind amber-100 */
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+        .category-icon-card.selected { 
+            border-color: #d97706; 
+            background-color: #fef3c7; 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); 
         }
-        /* Styling for Font Awesome icons within the cards */
         .category-icon-card i {
-            font-size: 2.5rem; /* Adjust size as needed */
-            margin-bottom: 0.75rem; /* mb-3, slightly more space for larger icons */
-            color: #ea580c; /* Tailwind orange-600 */
+            font-size: 2.5rem; margin-bottom: 0.75rem; color: #ea580c; 
         }
-        .category-icon-card.selected i { /* Icon styling when selected */
-            color: #c2410c; /* Tailwind orange-700 */
+        .category-icon-card.selected i { color: #c2410c; }
+        .category-icon-card span { 
+            font-weight: 500; color: #374151; text-align: center; font-size: 0.875rem; 
         }
-        .category-icon-card span { /* Text styling for category name */
-            font-weight: 500; /* font-medium */
-            color: #374151; /* gray-700 */
-            text-align: center;
-            font-size: 0.875rem; /* text-sm */
-        }
-        .category-icon-card.selected span { /* Text styling when selected */
-            color: #c2410c; /* Tailwind orange-700 */
-            font-weight: 600; /* font-semibold */
-        }
+        .category-icon-card.selected span { color: #c2410c; font-weight: 600; }
 
+        @media print {
+            body > *:not(.print-this-section), 
+            body > .print-this-section > *:not(.mail-in-form-content-wrapper) {
+                display: none !important;
+            }
+            .print-this-section {
+                display: block !important;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            .mail-in-form-content-wrapper {
+                display: block !important;
+                box-shadow: none !important;
+                border: 1px solid #ccc !important;
+                padding: 15px !important;
+                margin: 0 !important;
+            }
+            body { background-color: #fff !important; padding: 10px !important; margin: 0 !important;}
+            input, textarea, select {
+                border: 1px solid #ccc !important;
+                padding: 4px !important;
+                font-size: 10pt !important;
+            }
+            label, p, h1, h2, h3, address, li, span {
+                font-size: 10pt !important;
+                color: #000 !important; 
+            }
+            .no-print-in-form { display: none !important; }
+            #quoteDetailsSectionMailIn { margin-bottom: 20px !important; } 
+        }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="bg-gray-100 p-4 md:p-8 flex justify-center items-start min-h-screen">
 
@@ -118,8 +126,7 @@
         
         <div class="mb-6">
             <label class="block text-lg font-medium text-gray-700 mb-3">1. Select Service Category:</label>
-            <div id="categoryIconContainer" class="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
-                </div>
+            <div id="categoryIconContainer" class="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4"></div>
         </div>
 
         <div id="brandSelectionContainer" class="mb-6 hidden-integrated" style="display: none;">
@@ -137,12 +144,12 @@
         </div>
 
         <div id="repairsArea" class="mb-6 min-h-[200px] max-h-[50vh] overflow-y-auto p-1">
-            <p id="repairsPlaceholder" class="text-gray-500 text-center py-4">Please complete selections to see quote. You may choose multiple repairs of the same service category.</p>
-            </div>
+            <p id="repairsPlaceholder" class="text-gray-500 text-center py-4">Please complete selections to see repair options. You may choose multiple repairs of the same service category.</p>
+        </div>
 
         <div class="mt-8 text-center">
             <button id="contactButton" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-8 rounded-lg shadow-md transition duration-150 ease-in-out text-lg">
-                Click for Quote and Contact Info
+                Click for Quote & Contact Info
             </button>
             <p id="mainSubmissionMessage" class="mt-4 text-red-600 font-medium"></p>
         </div>
@@ -157,7 +164,7 @@
                     <h3 class="text-xl font-semibold text-gray-700 mb-3">Our Information</h3>
                     <ul class="space-y-2 text-gray-600">
                         <li><strong>Phone:</strong> <a href="tel:+16316062349" class="text-orange-600 hover:text-orange-700">(631) 606-2FIX (2349)</a></li>
-			<li><strong>Phone:</strong> <a href="tel:+16318555555" class="text-orange-600 hover:text-orange-700">(631) 855-5555</a></li>    
+                        <li><strong>Alt. Phone:</strong> <a href="tel:+16318555555" class="text-orange-600 hover:text-orange-700">(631) 855-5555</a></li>
                         <li><strong>Email:</strong> <a href="mailto:jwselectronicsrepair@gmail.com" class="text-orange-600 hover:text-orange-700">jwselectronicsrepair@gmail.com</a></li>
                         <li><strong>Address:</strong> 1167 Deer Park Ave, North Babylon, NY 11703</li>
                         <li><strong>Exact Location:</strong> Inside the Wireless Shack, Next to Sushi Express, on the North end of the Stables Gardens Strip, closer to Naz's Halal</li>
@@ -171,15 +178,173 @@
                     <div id="contactFormQuoteItems" class="text-sm space-y-1 text-gray-700 max-h-48 overflow-y-auto"></div>
                     <hr id="contactFormQuoteSeparator" class="my-2 border-gray-300" style="display: none;">
                     <p class="text-right font-bold mt-2 text-orange-600 text-2xl">Estimated Total: <span id="contactFormQuoteTotal"></span></p>
-                    <div class="mt-4 text-center">
-                        <a id="mailInFormButton" href="https://www.jwselectronicsrepair.com/mail-in-form" class="inline-block bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-6 rounded-lg shadow-sm transition duration-150 ease-in-out text-base">
-                            Mail-In Repair Form
-                        </a>
+                    <div class="mt-6 text-center">
+                        <button id="prepareMailInButton" class="bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2.5 px-6 rounded-lg shadow-md transition duration-150 ease-in-out text-base">
+                            Prepare Mail-In Form
+                        </button>
                     </div>
-                    <p class="text-xs text-center mt-4 text-gray-500">Please mention this quote when contacting us. Prices may change at any time and all repairs are subject to NY State sales tax.</p>
+                    <p class="text-xs text-center mt-4 text-gray-500">Please mention this quote when contacting us. Prices are subject to change at any time and are not always 100% accurate.</p>
                 </div>
             </div>
-            <p class="text-center text-gray-700 mt-6">Please Call, Text, E-Mail, Visit us or Mail in device to proceed with your repair.</p>
+            <p class="text-center text-gray-700 mt-6">Please call, text, email, or visit us with your quote details to proceed with your repair.</p>
+        </div>
+
+        <div id="integratedMailInSection" class="mt-10 pt-8 border-t-2 border-orange-500 hidden-integrated print-this-section" style="display: none;">
+            <div class="mail-in-form-content-wrapper">
+                <h2 class="text-3xl sm:text-4xl font-bold text-center text-gray-800 mb-5">Mail-in Repair Form</h2>
+                <p class="text-center text-gray-600 mb-6 text-sm sm:text-base">
+                    Please fill out this form completely and include it with your device when mailing it in for repair.
+                </p>
+
+                <div id="quoteDetailsSectionMailIn" class="mb-6 p-4 border border-orange-200 rounded-md bg-orange-50">
+                    <h3 class="text-xl font-semibold text-orange-700 mb-3">Online Quote Details:</h3>
+                    <div id="quotedItemsListMailIn" class="mb-2 text-sm text-gray-700 space-y-1"></div>
+                    <div id="quotedDiscountMailIn" class="text-sm text-green-600 font-medium" style="display: none;"></div>
+                    <hr id="quoteDetailsSeparatorMailIn" class="my-2 border-orange-200" style="display: none;">
+                    <p class="text-right font-bold text-orange-600 text-lg">Quoted Total: <span id="quotedTotalMailIn"></span></p>
+                    <p class="text-xs text-center mt-3 text-gray-500">This is an estimate. Final price will be confirmed after device inspection.</p>
+                </div>
+
+                <form id="actualMailInForm">
+                    <div class="mb-6 p-4 border border-gray-200 rounded-md bg-gray-50">
+                        <h3 class="text-xl sm:text-2xl font-semibold text-gray-700 mb-3">Customer Information</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label for="mailInFullName" class="block text-gray-700 text-sm font-bold mb-1">Full Name:</label>
+                                <input type="text" id="mailInFullName" name="mailInFullName" placeholder="John Doe"
+                                       class="shadow appearance-none border rounded-md w-full py-1.5 px-2.5 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-amber-500" required>
+                            </div>
+                            <div>
+                                <label for="mailInEmail" class="block text-gray-700 text-sm font-bold mb-1">Email Address:</label>
+                                <input type="email" id="mailInEmail" name="mailInEmail" placeholder="john.doe@example.com"
+                                       class="shadow appearance-none border rounded-md w-full py-1.5 px-2.5 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-amber-500" required>
+                            </div>
+                            <div>
+                                <label for="mailInPhone" class="block text-gray-700 text-sm font-bold mb-1">Phone Number:</label>
+                                <input type="tel" id="mailInPhone" name="mailInPhone" placeholder="(123) 456-7890"
+                                       class="shadow appearance-none border rounded-md w-full py-1.5 px-2.5 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-amber-500" required>
+                            </div>
+                            <div>
+                                <label for="mailInAddress" class="block text-gray-700 text-sm font-bold mb-1">Shipping Address:</label>
+                                <input type="text" id="mailInAddress" name="mailInAddress" placeholder="123 Main St, Anytown, USA 12345"
+                                       class="shadow appearance-none border rounded-md w-full py-1.5 px-2.5 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-amber-500" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-6 p-4 border border-gray-200 rounded-md bg-gray-50">
+                        <h3 class="text-xl sm:text-2xl font-semibold text-gray-700 mb-3">Device Information</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label for="mailInDeviceType" class="block text-gray-700 text-sm font-bold mb-1">Device Type:</label>
+                                <input type="text" id="mailInDeviceType" name="mailInDeviceType" placeholder="e.g., Smartphone, Game Console"
+                                       class="shadow appearance-none border rounded-md w-full py-1.5 px-2.5 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-amber-500" required>
+                            </div>
+                            <div>
+                                <label for="mailInBrand" class="block text-gray-700 text-sm font-bold mb-1">Brand:</label>
+                                <input type="text" id="mailInBrand" name="mailInBrand" placeholder="Apple, Samsung, Dell, etc."
+                                       class="shadow appearance-none border rounded-md w-full py-1.5 px-2.5 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-amber-500" required>
+                            </div>
+                            <div>
+                                <label for="mailInModel" class="block text-gray-700 text-sm font-bold mb-1">Model:</label>
+                                <input type="text" id="mailInModel" name="mailInModel" placeholder="iPhone 13, Galaxy S22, XPS 15, etc."
+                                       class="shadow appearance-none border rounded-md w-full py-1.5 px-2.5 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-amber-500" required>
+                            </div>
+                            <div>
+                                <label for="mailInSerialNumber" class="block text-gray-700 text-sm font-bold mb-1">Serial Number (or IMEI):</label>
+                                <input type="text" id="mailInSerialNumber" name="mailInSerialNumber" placeholder="ABC123XYZ789"
+                                       class="shadow appearance-none border rounded-md w-full py-1.5 px-2.5 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-amber-500">
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <label for="mailInProblemDescription" class="block text-gray-700 text-sm font-bold mb-1">Describe the Problem / Quoted Services:</label>
+                            <textarea id="mailInProblemDescription" name="mailInProblemDescription" rows="4" placeholder="e.g., Screen is cracked, device won't turn on, battery drains quickly, etc. Quoted services will appear here."
+                                      class="shadow appearance-none border rounded-md w-full py-1.5 px-2.5 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-amber-500" required></textarea>
+                        </div>
+                        <div class="mt-3">
+                            <label for="mailInPasscode" class="block text-gray-700 text-sm font-bold mb-1">Passcode/Unlock Pattern (if applicable):</label>
+                            <input type="text" id="mailInPasscode" name="mailInPasscode" placeholder="Leave blank if not applicable or device is factory reset"
+                                   class="shadow appearance-none border rounded-md w-full py-1.5 px-2.5 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-amber-500">
+                            <p class="text-xs text-gray-500 mt-1">Providing a passcode allows us to fully test the device after repair. If you prefer not to, please ensure the device is factory reset before mailing.</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-6 p-4 border border-gray-200 rounded-md bg-gray-50">
+                        <h3 class="text-xl sm:text-2xl font-semibold text-gray-700 mb-3">Terms and Conditions</h3>
+                        <div class="flex items-start mb-3">
+                            <input type="checkbox" id="mailInTermsAccepted" name="mailInTermsAccepted" class="mt-1 mr-2 accent-orange-500" required>
+                            <label for="mailInTermsAccepted" class="text-gray-700 text-sm">
+                                I agree to the <a href="https://www.jwselectronicsrepair.com/legal-notice" target="_blank" class="text-orange-600 hover:underline">repair terms and conditions</a>. I understand that I am responsible for backing up my data before sending the device, and that data loss may occur during the repair process.
+                            </label>
+                        </div>
+                        <div class="mt-4">
+                            <label for="mailInSignature" class="block text-gray-700 text-sm font-bold mb-1">Customer Signature:</label>
+                            <input type="text" id="mailInSignature" name="mailInSignature" placeholder="Print Full Name"
+                                   class="shadow appearance-none border-b-2 border-gray-400 w-full py-1.5 px-2.5 text-gray-700 leading-tight focus:outline-none focus:border-orange-500" required>
+                            <p class="text-xs text-gray-500 mt-1">By printing your name above, you agree to the terms.</p>
+                        </div>
+                        <div class="mt-3">
+                            <label for="mailInDate" class="block text-gray-700 text-sm font-bold mb-1">Date:</label>
+                            <input type="date" id="mailInDate" name="mailInDate"
+                                   class="shadow appearance-none border rounded-md w-full py-1.5 px-2.5 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-amber-500" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-6 p-4 border border-gray-200 rounded-md bg-yellow-50">
+                        <h3 class="text-xl sm:text-2xl font-semibold text-gray-700 mb-3">Mailing Instructions</h3>
+                        <p class="text-gray-700 mb-1.5 text-sm">
+                            1.  <strong>Package your device securely:</strong> Use appropriate padding (bubble wrap, foam peanuts) to prevent damage during transit. Do not include any wires or chargers.
+                        </p>
+                        <p class="text-gray-700 mb-1.5 text-sm">
+                            2.  <strong>Include this completed form:</strong> Place the printed form inside the package with your device.
+                        </p>
+                        <p class="text-gray-700 mb-1.5 text-sm">
+                            3.  <strong>Ship to:</strong>
+                        </p>
+                        <address class="text-gray-800 font-semibold ml-4 text-sm not-italic">
+                            JWS Electronics Repair<br>
+                            1167 deer park ave.<br>
+                            North Babylon, NY 11703<br>
+                            631-855-5555 or 631-606-2FIX(2349)
+                        </address>
+                        <p class="text-gray-700 mt-2 text-sm">
+                            We recommend using a shipping service with tracking and insurance. 
+                            After we receive your device and check it in, we will contact you with the diagnosis and exact pricing before proceeding with repair.
+                            Return shipping is included for most devices if the repair is performed. 
+                            If we are not repairing the device or device is unrepairable then you will be charged for return shipping.  
+                        </p>
+                    </div>
+
+                    <div class="no-print-in-form flex flex-col items-center space-y-4">
+                        <button type="button" onclick="window.print()"
+                                class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2.5 px-5 rounded-lg shadow-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-75">
+                            Print This Form
+                        </button>
+
+                        <div class="text-center">
+                            <p class="text-gray-700 font-semibold mb-2">Create a Shipping Label:</p>
+                            <div class="flex flex-wrap justify-center gap-3">
+                                <a href="https://www.ups.com/ship/guided/origin?loc=en_US" target="_blank" rel="noopener noreferrer"
+                                   class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
+                                    UPS
+                                </a>
+                                <a href="https://www.fedex.com/en-us/shipping/create-shipping-label.html" target="_blank" rel="noopener noreferrer"
+                                   class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
+                                    FedEx
+                                </a>
+                                <a href="https://www.usps.com/ship/online-shipping.htm" target="_blank" rel="noopener noreferrer"
+                                   class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
+                                    USPS
+                                </a>
+                                <a href="https://www.dhl.com/us-en/home/ship/create-shipping-label.html" target="_blank" rel="noopener noreferrer"
+                                   class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
+                                    DHL
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -2898,9 +3063,8 @@
                 ]
             },
         ];
-           // --- END OF SERVICE DATA ---
+        // --- END OF SERVICE DATA ---
 
-      // DOM Element References
         const categoryIconContainer = document.getElementById('categoryIconContainer');
         const brandSelect = document.getElementById('brandSelect');
         const modelSelect = document.getElementById('modelSelect');
@@ -2910,14 +3074,25 @@
         const repairsPlaceholder = document.getElementById('repairsPlaceholder');
         const mainSubmissionMessage = document.getElementById('mainSubmissionMessage');
         const contactButton = document.getElementById('contactButton');
+        
         const inlineContactSection = document.getElementById('inlineContactSection');
         const contactFormQuoteItems = document.getElementById('contactFormQuoteItems');
         const contactFormQuoteTotal = document.getElementById('contactFormQuoteTotal');
         const contactFormQuoteSeparator = document.getElementById('contactFormQuoteSeparator');
-        const mailInFormButton = document.getElementById('mailInFormButton'); 
+        const prepareMailInButton = document.getElementById('prepareMailInButton'); 
+        
+        const integratedMailInSection = document.getElementById('integratedMailInSection');
+        const mailInDeviceType = document.getElementById('mailInDeviceType');
+        const mailInBrand = document.getElementById('mailInBrand');
+        const mailInModel = document.getElementById('mailInModel');
+        const mailInProblemDescription = document.getElementById('mailInProblemDescription');
+        const mailInDate = document.getElementById('mailInDate');
+        const quoteDetailsSectionMailIn = document.getElementById('quoteDetailsSectionMailIn');
+        const quotedItemsListMailIn = document.getElementById('quotedItemsListMailIn');
+        const quotedDiscountMailIn = document.getElementById('quotedDiscountMailIn');
+        const quotedTotalMailIn = document.getElementById('quotedTotalMailIn');
+        const quoteDetailsSeparatorMailIn = document.getElementById('quoteDetailsSeparatorMailIn');
 
-
-        // State Variables
         let currentSelectedItems = {}; 
         let currentCategoryData = null; 
         let currentBrandData = null;    
@@ -2925,12 +3100,13 @@
         let selectedCategoryIcon = null; 
 
         function toggleElementVisibility(element, show) {
+            if (!element) return; 
             if (show) {
                 element.style.display = 'block'; 
                 setTimeout(() => {
                     element.classList.remove('hidden-integrated');
                     element.classList.add('visible-integrated');
-                }, 10);
+                }, 50); 
             } else {
                 element.classList.remove('visible-integrated');
                 element.classList.add('hidden-integrated');
@@ -2948,7 +3124,6 @@
                 const iconCard = document.createElement('div');
                 iconCard.className = 'category-icon-card'; 
                 iconCard.dataset.categoryIndex = index; 
-
                 const defaultIconHTML = `<i class="fas fa-tools"></i>`; 
                 iconCard.innerHTML = `
                     ${category.iconSVG || defaultIconHTML}
@@ -2971,6 +3146,7 @@
             resetRepairsArea();
             currentSelectedItems = {}; 
             toggleElementVisibility(inlineContactSection, false); 
+            toggleElementVisibility(integratedMailInSection, false);
 
             if (categoryIndex === "" || categoryIndex === null) {
                 currentCategoryData = null;
@@ -2987,7 +3163,9 @@
             });
             brandSelect.disabled = false; 
             toggleElementVisibility(brandSelectionContainer, true); 
-            brandSelectionContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); 
+            setTimeout(() => { 
+                 brandSelectionContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
         }
 
         function resetAndHideDropdown(selectElement, containerElement, placeholderText) {
@@ -3010,6 +3188,7 @@
             resetAndHideDropdown(modelSelect, modelSelectionContainer, "-- Choose a Model --");
             resetRepairsArea();
             toggleElementVisibility(inlineContactSection, false); 
+            toggleElementVisibility(integratedMailInSection, false);
 
             if (brandIndex === "" || !currentCategoryData) {
                 currentBrandData = null;
@@ -3026,13 +3205,16 @@
             });
             modelSelect.disabled = false; 
             toggleElementVisibility(modelSelectionContainer, true); 
-            modelSelectionContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); 
+            setTimeout(() => { 
+                modelSelectionContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); 
+            }, 100);
         });
 
         modelSelect.addEventListener('change', (event) => {
             const modelIndex = event.target.value; 
             resetRepairsArea();
             toggleElementVisibility(inlineContactSection, false); 
+            toggleElementVisibility(integratedMailInSection, false);
 
             if (modelIndex === "" || !currentBrandData) {
                 currentModelData = null;
@@ -3040,7 +3222,9 @@
             }
             currentModelData = currentBrandData.models[modelIndex]; 
             displayRepairs(); 
-            repairsArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); 
+            setTimeout(() => { 
+                repairsArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); 
+            }, 100);
         });
 
         function displayRepairs() {
@@ -3177,7 +3361,6 @@
             return { subtotal, discountAmount, finalTotal, itemCount };
         }
 
-
         function showContactSection() {
             const quoteDetails = calculateQuoteDetails(); 
 
@@ -3190,18 +3373,16 @@
             mainSubmissionMessage.textContent = ''; 
 
             contactFormQuoteItems.innerHTML = ''; 
-            const ul = document.createElement('ul');
-            ul.className = 'list-disc list-inside space-y-1'; 
-            let itemsParamArray = []; 
-
+            const contactUl = document.createElement('ul');
+            contactUl.className = 'list-disc list-inside space-y-1'; 
+            
             for (const id in currentSelectedItems) {
                 const item = currentSelectedItems[id];
                 const li = document.createElement('li');
                 li.innerHTML = `${item.name} (${item.model}) - <span class="font-semibold">$${item.price.toFixed(2)}</span>`;
-                ul.appendChild(li);
-                itemsParamArray.push(`${item.name} (${item.model})`); 
+                contactUl.appendChild(li);
             }
-            contactFormQuoteItems.appendChild(ul);
+            contactFormQuoteItems.appendChild(contactUl);
 
             if (quoteDetails.itemCount >= 2 && quoteDetails.discountAmount > 0) {
                 contactFormQuoteSeparator.style.display = 'block'; 
@@ -3209,34 +3390,93 @@
                 discountLi.className = 'text-green-600 font-medium mt-1'; 
                 discountLi.style.listStyleType = 'none'; 
                 discountLi.innerHTML = `Multi-Item Discount (5%): <span class="font-semibold">-$${quoteDetails.discountAmount.toFixed(2)}</span>`;
-                ul.appendChild(discountLi); 
+                contactUl.appendChild(discountLi); 
             } else {
                  contactFormQuoteSeparator.style.display = 'none'; 
             }
-            
             contactFormQuoteTotal.textContent = `$${quoteDetails.finalTotal.toFixed(2)}`; 
-
-            const baseMailInUrl = 'https://www.jwselectronicsrepair.com/mail-in-form';
-            const params = new URLSearchParams();
-            params.append('total', quoteDetails.finalTotal.toFixed(2));
-            params.append('items', itemsParamArray.join('; ')); 
-            if (quoteDetails.discountAmount > 0) {
-                params.append('discount', quoteDetails.discountAmount.toFixed(2));
-            }
-            const generatedUrl = `${baseMailInUrl}?${params.toString()}`;
-            mailInFormButton.href = generatedUrl;
-            console.log("Quote Tool - Generated Mail-In URL:", generatedUrl); // For debugging on the quote tool page
-
+            
             toggleElementVisibility(inlineContactSection, true); 
-            inlineContactSection.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+            toggleElementVisibility(integratedMailInSection, false); 
+            
+            setTimeout(() => { 
+                inlineContactSection.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+            }, 150); 
         }
+
+        function prepareAndShowMailInForm() {
+            const quoteDetails = calculateQuoteDetails();
+
+            if (quoteDetails.itemCount === 0) {
+                mainSubmissionMessage.textContent = "Please select at least one repair to generate a quote for the mail-in form.";
+                mainSubmissionMessage.className = 'mt-4 text-red-600 font-medium';
+                setTimeout(() => { mainSubmissionMessage.textContent = ''; }, 4000);
+                return;
+            }
+            mainSubmissionMessage.textContent = '';
+
+            // Populate the quote details within the mail-in form section
+            quotedItemsListMailIn.innerHTML = '';
+            const mailInUl = document.createElement('ul');
+            mailInUl.className = 'list-disc list-inside space-y-1';
+            let problemDescriptionText = "Services from online quote:\n";
+
+            for (const id in currentSelectedItems) {
+                const item = currentSelectedItems[id];
+                const li = document.createElement('li');
+                li.innerHTML = `${item.name} (${item.model}) - <span class="font-semibold">$${item.price.toFixed(2)}</span>`;
+                mailInUl.appendChild(li);
+                problemDescriptionText += `- ${item.name} (${item.model} - $${item.price.toFixed(2)})\n`;
+            }
+            quotedItemsListMailIn.appendChild(mailInUl);
+
+            if (quoteDetails.itemCount >= 2 && quoteDetails.discountAmount > 0) {
+                quoteDetailsSeparatorMailIn.style.display = 'block';
+                quotedDiscountMailIn.textContent = `Multi-Item Discount (5%): -$${quoteDetails.discountAmount.toFixed(2)}`;
+                quotedDiscountMailIn.style.display = 'block';
+                problemDescriptionText += `\nDiscount Applied: -$${quoteDetails.discountAmount.toFixed(2)}\n`;
+            } else {
+                quoteDetailsSeparatorMailIn.style.display = 'none';
+                quotedDiscountMailIn.style.display = 'none';
+            }
+            quotedTotalMailIn.textContent = `$${quoteDetails.finalTotal.toFixed(2)}`;
+            problemDescriptionText += `\nQuoted Total: $${quoteDetails.finalTotal.toFixed(2)}`;
+            
+            quoteDetailsSectionMailIn.style.display = 'block';
+
+
+            // Pre-fill device info
+            if (mailInDeviceType && currentCategoryData) mailInDeviceType.value = currentCategoryData.categoryName;
+            if (mailInBrand && currentBrandData) mailInBrand.value = currentBrandData.brandName;
+            if (mailInModel && currentModelData) mailInModel.value = currentModelData.modelName;
+            if (mailInProblemDescription) mailInProblemDescription.value = problemDescriptionText.trim();
+
+            if (mailInDate) {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0'); 
+                const day = String(today.getDate()).padStart(2, '0');
+                mailInDate.value = `${year}-${month}-${day}`;
+            }
+
+            toggleElementVisibility(integratedMailInSection, true); 
+            setTimeout(() => { 
+                 integratedMailInSection.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+            }, 150); 
+        }
+
 
         document.addEventListener('DOMContentLoaded', () => {
             populateCategories(); 
             resetAndHideDropdown(brandSelect, brandSelectionContainer, "-- Choose a Brand --");
             resetAndHideDropdown(modelSelect, modelSelectionContainer, "-- Choose a Model --");
             toggleElementVisibility(inlineContactSection, false);
+            toggleElementVisibility(integratedMailInSection, false); 
             contactButton.addEventListener('click', showContactSection);
+            
+            if(prepareMailInButton) { 
+                prepareMailInButton.addEventListener('click', prepareAndShowMailInForm);
+            }
         });
     </script>
 
