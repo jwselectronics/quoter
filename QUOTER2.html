@@ -84,46 +84,50 @@
         }
         .category-icon-card.selected span { color: #c2410c; font-weight: 600; }
 
-        /* --- REVISED PRINT STYLES V3 --- */
+        /* --- REVISED PRINT STYLES V4 (Mobile Focus) --- */
         @media print {
             body {
                 background-color: #fff !important; 
                 margin: 0 !important;
                 padding: 0 !important; 
+                width: 100% !important;
+                -webkit-print-color-adjust: exact !important; /* For Chrome/Safari */
+                print-color-adjust: exact !important; /* Standard */
             }
-            /* Hide everything on the page initially */
+            /* Hide all direct children of body initially */
             body > * {
                 display: none !important;
+                visibility: hidden !important;
             }
-            /* Show the main wrapper for the quote tool */
+            /* Make the main quote tool wrapper visible, but it will act as a container */
             #quoteToolWrapper {
                 display: block !important;
+                visibility: visible !important;
                 box-shadow: none !important;
                 border: none !important;
                 padding: 0 !important;
                 margin: 0 !important;
-                width: 100% !important; /* Ensure it takes full width for print context */
+                width: 100% !important; 
                 max-width: 100% !important;
             }
             /* Within the quote tool wrapper, hide everything except the integrated mail-in section */
             #quoteToolWrapper > *:not(#integratedMailInSection) {
                 display: none !important;
+                visibility: hidden !important;
             }
             /* Ensure the mail-in section itself is displayed as a block and flows naturally */
             #integratedMailInSection {
                 display: block !important;
                 visibility: visible !important;
-                position: static !important; /* Critical for natural flow in print */
-                width: 100% !important; /* Take full width of its container */
+                position: static !important; 
+                width: 100% !important; 
                 margin: 0 !important;
                 padding: 10px !important; 
                 border: none !important;
                 box-shadow: none !important;
-                 /* Ensure children are visible if parent visibility was changed */
-                & * { 
-                    visibility: visible !important;
-                }
+                background-color: #fff !important; /* Ensure white background for the section */
             }
+            /* Ensure the content wrapper inside is visible and styled for print */
             .mail-in-form-content-wrapper {
                 visibility: visible !important;
                 display: block !important;
@@ -133,26 +137,43 @@
                 margin: 0 !important;
                 background-color: #fff !important;
             }
+            /* Ensure all children within the mail-in form content are visible */
+            #integratedMailInSection *, 
+            .mail-in-form-content-wrapper * {
+                visibility: visible !important;
+                background-color: transparent !important; /* Prevent Tailwind bg colors from overriding */
+                color: #000 !important; /* Default all text to black */
+            }
+
             input, textarea, select {
                 border: 1px solid #ccc !important;
                 padding: 4px !important;
                 font-size: 10pt !important;
                 background-color: #fff !important; 
                 color: #000 !important; 
-                -webkit-print-color-adjust: exact; 
-                print-color-adjust: exact; 
             }
             label, p, h1, h2, h3, address, li, span, strong, em { 
                 font-size: 10pt !important;
                 color: #000 !important;
-                background-color: transparent !important; 
             }
+            /* Specific text colors for print if needed, overriding the generic black */
+            #quoteDetailsSectionMailIn h3, 
+            #quoteDetailsSectionMailIn .text-orange-600,
+            #quoteDetailsSectionMailIn .text-orange-700 {
+                 color: #000 !important; /* Make orange text black for print */
+            }
+            #quoteDetailsSectionMailIn .text-green-600 {
+                color: #000 !important; /* Make green text black for print */
+            }
+
+
             .no-print-in-form { 
                 display: none !important; 
             }
             #quoteDetailsSectionMailIn {
                 margin-bottom: 20px !important;
-                background-color: #f9fafb !important;
+                background-color: #f9fafb !important; /* Light gray for this specific section in print */
+                border: 1px dashed #ccc !important; /* Add a light border to this section */
             }
             a, a:visited {
                 color: #000 !important; 
@@ -164,7 +185,6 @@
             .mb-6, .mb-5, .mt-8, .mt-6, .mb-3, .mt-2, .mt-1 {
                 padding: 0 !important;
                 margin: 0 !important;
-                /* Add back essential margins/paddings for the form content if needed within this print block */
             }
              #quoteDetailsSectionMailIn, 
              .mail-in-form-content-wrapper form > div { /* Targetting sections within the form */
@@ -173,7 +193,6 @@
              .mail-in-form-content-wrapper h2, .mail-in-form-content-wrapper h3 {
                  margin-bottom: 10px !important;
              }
-
         }
         /* --- END OF REVISED PRINT STYLES --- */
     </style>
@@ -3122,7 +3141,7 @@
                 ]
             },
         ];
-          // --- END OF SERVICE DATA ---
+        // --- END OF SERVICE DATA ---
 
         const categoryIconContainer = document.getElementById('categoryIconContainer');
         const brandSelect = document.getElementById('brandSelect');
