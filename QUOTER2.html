@@ -84,7 +84,7 @@
         }
         .category-icon-card.selected span { color: #c2410c; font-weight: 600; }
 
-        /* --- REVISED PRINT STYLES V10 (Aggressive Mobile Print Fix) --- */
+        /* --- REVISED PRINT STYLES V11 (Mobile Focus) --- */
         @media print {
             html, body {
                 height: auto !important;
@@ -97,54 +97,84 @@
                 print-color-adjust: exact !important;
             }
 
-            /* Hide everything by default */
-            body * {
-                display: none !important; /* More forceful than visibility: hidden */
+            /* Hide all direct children of body by default */
+            body > * {
+                display: none !important;
             }
 
-            /* Make the mail-in section and its direct children visible and take up the page */
-            #integratedMailInSection, 
-            #integratedMailInSection > div { /* Target direct children like .mail-in-form-content-wrapper */
+            /* Show the main quote tool wrapper (it contains the mail-in form) */
+            #quoteToolWrapper {
                 display: block !important;
-                visibility: visible !important; /* Ensure visibility if display:none was inherited */
-                position: static !important; 
+                visibility: visible !important;
+                position: static !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                border: none !important;
+                box-shadow: none !important;
+                background-color: #fff !important;
+            }
+
+            /* Within the quote tool wrapper, hide everything EXCEPT the integrated mail-in section */
+            #quoteToolWrapper > *:not(#integratedMailInSection) {
+                display: none !important;
+            }
+            
+            /* Ensure the mail-in section itself is displayed and takes up space */
+            #integratedMailInSection {
+                display: block !important;
+                visibility: visible !important;
+                position: static !important;
                 width: 100% !important;
                 margin: 0 !important;
-                padding: 0 !important; /* Reset padding, add specific padding below */
-                box-shadow: none !important;
+                padding: 15px !important; /* Overall padding for the printable area */
                 border: none !important;
+                box-shadow: none !important;
                 background-color: #fff !important;
                 max-height: none !important; 
                 overflow: visible !important; 
                 opacity: 1 !important; 
                 transform: none !important; 
             }
-            
-            #integratedMailInSection {
-                 padding: 15px !important; /* Overall padding for the printable area */
+
+            /* Ensure its direct content wrapper is also block */
+            #integratedMailInSection > .mail-in-form-content-wrapper {
+                display: block !important;
+                visibility: visible !important;
+                border: 1px solid #ccc !important; 
+                padding: 15px !important;
+                margin: 0 !important; 
+                background-color: #fff !important;
             }
 
-            /* Make all descendants within the mail-in form content wrapper visible */
+            /* Force all children of the content wrapper to be visible and reset display */
             #integratedMailInSection .mail-in-form-content-wrapper * {
-                display: revert !important; /* Try to revert to their natural display type */
+                display: revert !important; /* Revert to default display type (block, inline, etc.) */
                 visibility: visible !important;
                 background-color: transparent !important; 
                 color: #000 !important; 
                 font-size: 10pt !important; 
                 line-height: 1.3 !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                margin: revert !important; /* Revert margins */
+                padding: revert !important; /* Revert paddings */
             }
             
-            /* Ensure specific elements within the form are block for layout */
-             #integratedMailInSection .mail-in-form-content-wrapper h2,
-             #integratedMailInSection .mail-in-form-content-wrapper h3,
-             #integratedMailInSection .mail-in-form-content-wrapper p,
-             #integratedMailInSection .mail-in-form-content-wrapper div,
-             #integratedMailInSection .mail-in-form-content-wrapper form,
-             #integratedMailInSection .mail-in-form-content-wrapper ul,
-             #integratedMailInSection .mail-in-form-content-wrapper li,
-             #integratedMailInSection .mail-in-form-content-wrapper address {
-                display: block !important;
-             }
+            /* Specific styling for elements within the form for print */
+            #integratedMailInSection h1, 
+            #integratedMailInSection h2, 
+            #integratedMailInSection h3 {
+                font-weight: bold !important;
+                margin-top: 0.75em !important; 
+                margin-bottom: 0.5em !important;
+            }
+             #integratedMailInSection .mail-in-form-content-wrapper > h2:first-child { /* The "Mail-in Repair Form" title */
+                font-size: 16pt !important;
+                text-align: center !important;
+                margin-bottom: 1em !important;
+            }
 
 
             #integratedMailInSection input, 
@@ -154,7 +184,6 @@
                 padding: 4px 6px !important;
                 background-color: #fff !important;
                 color: #000 !important;
-                border-radius: 0 !important;
                 width: 98% !important; 
                 box-sizing: border-box !important;
             }
@@ -182,16 +211,11 @@
             }
             
             #integratedMailInSection .grid { 
-                 display: block !important; 
+                 display: block !important; /* Stack grid items for print */
              }
              #integratedMailInSection .grid > div {
                  margin-bottom: 0.5em !important; 
              }
-             #integratedMailInSection .mail-in-form-content-wrapper > h2:first-child {
-                font-size: 16pt !important;
-                text-align: center !important;
-                margin-bottom: 1em !important;
-            }
         }
         /* --- END OF REVISED PRINT STYLES --- */
     </style>
@@ -3140,7 +3164,7 @@
                 ]
             },
         ];
-          // --- END OF SERVICE DATA ---
+           // --- END OF SERVICE DATA ---
 
         const categoryIconContainer = document.getElementById('categoryIconContainer');
         const brandSelect = document.getElementById('brandSelect');
@@ -3559,7 +3583,3 @@
 
 </body>
 </html>
-
-</body>
-</html>
-
